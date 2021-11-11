@@ -6,11 +6,7 @@ export class BaseRocket {
   /**
    * Represents all registered rockets.
    */
-  protected readonly rockets: Map<string, Partial<Service>>;
-
-  constructor() {
-    this.rockets = new Map();
-  }
+  protected readonly rockets: Map<string, Partial<Service>> = new Map();
 
   /**
    * Responsible method of register new rocket.

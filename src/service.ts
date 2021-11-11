@@ -2,11 +2,16 @@ import { NotImplemented, MethodNotAllowed, BadRequest } from "http-errors";
 import { NextFunction, Request, Response } from "express";
 import Busboy from "busboy";
 
-import { Middleware } from "./index";
+import { ServiceOptions } from "declarations";
 import { handlerPromise } from "./utils";
+import { Middleware } from "./index";
 import { BaseRocket } from "./base";
 
 export class RocketService extends BaseRocket {
+  constructor(private readonly options?: Partial<ServiceOptions>) {
+    super();
+  }
+
   /**
    * Middleware responsible method of upload file.
    */
@@ -18,10 +23,26 @@ export class RocketService extends BaseRocket {
         new NotImplemented(`The ${ service } rocket is not registered.`)
       );
 
-      const busboy = new Busboy({ headers: req.headers });
+      const busboy = new Busboy({
+        headers: req.headers,
+        limits: { ...this.options, files: 1, fields: 1 }
+      });
 
       busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
         if (!filename) return next(new BadRequest("You need to add a file."));
+
+        const result = filename.match(/\.([0-9a-z]+)(?:[\?#]|$)/g);
+        if (!result) return next(new BadRequest("The extension format is invalid."));
+
+        const { extensions = [] } = this.options || {};
+        if (extensions.length) {
+          const ext: string = result[0];
+          const hasExist: string | undefined = extensions.find((item) => item === ext);
+
+          if (!hasExist) return next(
+            new BadRequest(`This extension is not allowed. Consider using: ${ extensions }`)
+          );
+        }
 
         if (typeof rocket.create !== "function") return next(
           new MethodNotAllowed("The create method not implemented.")

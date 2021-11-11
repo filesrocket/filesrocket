@@ -147,6 +147,25 @@ export interface Options {
   } | undefined;
 }
 
+export interface ServiceOptions {
+  /**
+   * Represent of file size in format bytes.
+   */
+  fileSize: number;
+  /**
+   * Max field name size (in bytes) (Default: 100 bytes).
+   */
+  fieldNameSize?: number | undefined;
+  /**
+   * Max field value size (in bytes) (Default: 1MB).
+   */
+  fieldSize?: number | undefined;
+  /**
+   * All extension allowed.
+   */
+  extensions: string[];
+}
+
 export interface RouterOptions {
   /**
    * Options of Busboy.
