@@ -3,12 +3,11 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Language and Environment */
-    "target": "ES5",
+    "target": "ES2018",
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
     "rootDir": "./src",                                  /* Specify the root folder within your source files. */
-    "baseUrl": "./src",
 
     /* Emit */
     "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */

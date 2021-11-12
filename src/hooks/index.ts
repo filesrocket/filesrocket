@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { Middleware, RocketService } from "../index";
+import { PROPERTY_UPLOADED } from "../declarations";
 
 export interface MethodsHook<T = void> {
   create: Middleware<T>[];
@@ -14,7 +15,7 @@ export interface Hooks {
 
 function formatter(length: number): Middleware<void> {
   return (req: Request, res: Response, next: NextFunction) => {
-    length > 0 ? next() : res.status(200).json((req as any).rocketData);
+    length > 0 ? next() : res.status(200).json((req as any)[PROPERTY_UPLOADED]);
   }
 }
 

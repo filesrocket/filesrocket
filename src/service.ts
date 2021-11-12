@@ -2,7 +2,7 @@ import { NotImplemented, MethodNotAllowed, BadRequest } from "http-errors";
 import { NextFunction, Request, Response } from "express";
 import Busboy from "busboy";
 
-import { ServiceOptions } from "declarations";
+import { PROPERTY_UPLOADED, ServiceOptions } from "./declarations";
 import { handlerPromise } from "./utils";
 import { Middleware } from "./index";
 import { BaseRocket } from "./base";
@@ -18,6 +18,7 @@ export class RocketService extends BaseRocket {
   create(): Middleware<void> {
     return (req: Request, _: Response, next: NextFunction) => {
       const { service = "" } = req.query;
+
       const rocket = this.getRocket(service as string);
       if (!rocket) return next(
         new NotImplemented(`The ${ service } rocket is not registered.`)
@@ -25,15 +26,21 @@ export class RocketService extends BaseRocket {
 
       const busboy = new Busboy({
         headers: req.headers,
-        limits: { ...this.options, files: 1, fields: 1 }
+        limits: { ...this.options, files: 1 } });
+      req.body = {};
+
+      busboy.on("field", (fieldname, value) => {
+        Object.assign(req.body, { [fieldname]: value });
       });
 
       busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
         if (!filename) return next(new BadRequest("You need to add a file."));
 
+        // Get extension.
         const result = filename.match(/\.([0-9a-z]+)(?:[\?#]|$)/g);
         if (!result) return next(new BadRequest("The extension format is invalid."));
 
+        // Validate extensions allowed.
         const { extensions = [] } = this.options || {};
         if (extensions.length) {
           const ext: string = result[0];
@@ -44,6 +51,7 @@ export class RocketService extends BaseRocket {
           );
         }
 
+        // Verify that the method is defined.
         if (typeof rocket.create !== "function") return next(
           new MethodNotAllowed("The create method not implemented.")
         );
@@ -51,7 +59,7 @@ export class RocketService extends BaseRocket {
         rocket
           .create({ fieldname, file, filename, encoding, mimetype }, req.query)
           .then(value => {
-            req = Object.defineProperty(req, "rocketData", { value });
+            req = Object.defineProperty(req, PROPERTY_UPLOADED, { value });
             next();
           })
           .catch(next);
@@ -67,6 +75,7 @@ export class RocketService extends BaseRocket {
   list(): Middleware<void> {
     return async (req: Request, _: Response, next: NextFunction) => {
       const { service = "" } = req.query;
+      
       const rocket = this.getRocket(service as string);
       if (!rocket) return next(
         new NotImplemented(`The ${ service } rocket is not registered.`)
@@ -79,7 +88,7 @@ export class RocketService extends BaseRocket {
       const [value, err] = await handlerPromise(rocket.list(req.query));
       if (!value || err) return next(err);
 
-      req = Object.defineProperty(req, "rocketData", { value });
+      req = Object.defineProperty(req, PROPERTY_UPLOADED, { value });
       next();
     }
   }
@@ -90,6 +99,7 @@ export class RocketService extends BaseRocket {
   remove(): Middleware<void> {
     return async (req: Request, _: Response, next: NextFunction) => {
       const { service = "", path = "" } = req.query;
+      
       const rocket = this.getRocket(service as string);
       if (!rocket) return next(
         new NotImplemented(`The ${ service } rocket is not registered.`)
@@ -102,7 +112,7 @@ export class RocketService extends BaseRocket {
       const [value, err] = await handlerPromise(rocket.remove(path as string, req.query));
       if (!value || err) return next(err);
 
-      req = Object.defineProperty(req, "rocketData", { value });
+      req = Object.defineProperty(req, PROPERTY_UPLOADED, { value });
       next();
     }
   }

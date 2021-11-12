@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { RocketService, Hooks } from "./index";
 
+export const PROPERTY_UPLOADED = "filesUploaded";
+
 export interface Payload {
   /**
    * Filename. For example: picture.png, songs.mp3 and more...
