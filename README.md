@@ -271,4 +271,11 @@ The rockets are pre-made classes for you to manage your files with various cloud
 
 ## Example.
 
-In the event that its operation has not been clear to you, or you have problems implementing it, we have created a repository so that you can clone it and play with it. Click in the following link: https://github.com/IvanZM123/filesrocket-app-example
+In the event that its operation has not been clear to you, or you have problems implementing it, we have created a repository so that you can clone it and play with it. Visit the following repositories:
+
+| Name | Repository |
+|------|------------|
+| filesrocket-vue-app | https://github.com/IvanZM123/filesrocket-vue-app |
+| filesrocket-angular-app | https://github.com/IvanZM123/filesrocket-angular-app |
+| filesrocket-react-app | https://github.com/IvanZM123/filesrocket-react-app |
+| filesrocket-server-app | https://github.com/IvanZM123/filesrocket-server-app |
