@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { Middleware, RocketService } from "../index";
-import { PROPERTY_UPLOADED } from "../declarations";
+
+import { PROPERTY_UPLOADED, RocketMethods } from "./declarations";
+import { Middleware } from "./index";
 
 export interface MethodsHook<T = void> {
   create: Middleware<T>[];
@@ -19,11 +20,14 @@ function formatter(length: number): Middleware<void> {
   }
 }
 
-export function serviceHandler(
-  rocket: RocketService,
-  method: keyof MethodsHook,
-  hooks: Partial<Hooks> = {}
-): Middleware<void>[] {
+export interface HandlerOptions {
+  method: keyof MethodsHook;
+  hooks?: Partial<Hooks>;
+  controller: RocketMethods;
+}
+
+export function serviceHandler(options: HandlerOptions): Middleware<void>[] {
+  const { hooks = {}, method, controller } = options;
   const beforeHook: Partial<MethodsHook> = hooks.before || {};
   const afterHook: Partial<MethodsHook> = hooks.after || {};
 
@@ -32,7 +36,7 @@ export function serviceHandler(
 
   return [
     ...before,
-    rocket[method](),
+    controller[method](),
     formatter(after.length),
     ...after,
     formatter(0)
