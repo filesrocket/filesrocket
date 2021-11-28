@@ -38,7 +38,7 @@ export interface DataFile {
   mimetype: string;
 }
 
-export interface DataResult {
+export interface DataResult extends Query {
   /**
    * File name.
    */

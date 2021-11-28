@@ -3,7 +3,6 @@ import { BadRequest } from "http-errors";
 import Busboy from "busboy";
 
 import { PROPERTY_UPLOADED, Middleware, DataFile } from "../index";
-import { handlerPromise } from "../utils";
 import { RocketBase } from "../base";
 
 export class FileService extends RocketBase {
@@ -52,46 +51,52 @@ export class FileService extends RocketBase {
 
   list(): Middleware<void> {
     return async (req: Request, _: Response, next: NextFunction) => {
-      const serviceName = req.params.service;
+      try {
+        const serviceName = req.params.service;
 
-      const service = this.getService(serviceName);
+        const service = this.getService(serviceName);
 
-      if (!service) {
-        return next(new Error(`The ${ serviceName } rocket not register`));
+        if (!service) {
+          return next(new Error(`The ${ serviceName } rocket not register`));
+        }
+
+        if (typeof service?.list !== "function") {
+          return next(new Error("List method not supported."));
+        }
+
+        const files = await service.list(req.query);
+
+        req = Object.defineProperty(req, PROPERTY_UPLOADED, { value: files });
+        next();
+      } catch (error) {
+        next(error);
       }
-
-      if (typeof service?.list !== "function") {
-        return next(new Error("List method not supported."));
-      }
-
-      const [value, err] = await handlerPromise(service.list(req.query));
-      if (!value || err) return next(err);
-
-      req = Object.defineProperty(req, PROPERTY_UPLOADED, { value });
-      next();
     }
   }
 
   remove(): Middleware<void> {
     return async (req: Request, _: Response, next: NextFunction) => {
-      const serviceName = req.params.service;
-      const { path = "" } = req.query;
+      try {
+        const serviceName = req.params.service;
+        const { path = "" } = req.query;
 
-      const service = this.getService(serviceName);
+        const service = this.getService(serviceName);
 
-      if (!service) {
-        return next(new Error(`The ${ serviceName } rocket not register`));
+        if (!service) {
+          return next(new Error(`The ${ serviceName } rocket not register`));
+        }
+
+        if (typeof service?.remove !== "function") {
+          return next(new Error("Remove method not supported."));
+        }
+
+        const file = await service.remove(path as string, req.query);
+
+        req = Object.defineProperty(req, PROPERTY_UPLOADED, { value: file });
+        next();
+      } catch (error) {
+        next(error);
       }
-
-      if (typeof service?.remove !== "function") {
-        return next(new Error("Remove method not supported."));
-      }
-
-      const [value, err] = await handlerPromise(service.remove(path as string, req.query));
-      if (!value || err) return next(err);
-
-      req = Object.defineProperty(req, PROPERTY_UPLOADED, { value });
-      next();
     }
   }
 }
