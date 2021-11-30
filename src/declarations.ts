@@ -69,6 +69,22 @@ export interface DataResult extends Query {
   updatedAt: Date;
 }
 
+export interface Options {
+  highWaterMark: number | undefined;
+  fileHwm: number | undefined;
+  defCharset: string | undefined;
+  preservePath: boolean | undefined;
+  limits: {
+    fieldNameSize?: number | undefined;
+    fieldSize?: number | undefined;
+    fields?: number | undefined;
+    fileSize?: number | undefined;
+    files?: number | undefined;
+    parts?: number | undefined;
+    headerPairs?: number | undefined;
+  } | undefined;
+}
+
 export interface Pagination {
   /**
    * Items by default.
@@ -143,6 +159,11 @@ export interface RouterParams<T, K> {
   service: Partial<ServiceMethods<T, K>>;
   controller: RocketMethods;
   hooks?: Hooks;
+}
+
+export interface ControllerOptions {
+  options?: Partial<Options>;
+  path: string;
 }
 
 export type Middleware<T> = (

@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
+import { BadRequest } from "http-errors";
 
 import { Middleware, DataResult, DataDir, PROPERTY_UPLOADED } from "../index";
+import { ControllerOptions } from "../declarations";
 import { handlerPromise } from "../utils";
 import { RocketBase } from "../base";
 
 export class DirectoryService extends RocketBase<DataDir, DataResult> {
-  constructor(path: string) {
-    super(path);
+  constructor(options: Pick<ControllerOptions, "path">) {
+    super(options.path);
     this.type = "Directories";
   }
 
@@ -77,6 +79,8 @@ export class DirectoryService extends RocketBase<DataDir, DataResult> {
         }
 
         const { path = "" } = req.query;
+        if (!path) return next(new BadRequest("The <path> property is required."));
+
         const entity = await service.remove(path as string, req.query);
 
         Object.defineProperty(req, PROPERTY_UPLOADED, { value: entity });

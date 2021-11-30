@@ -3,9 +3,14 @@ import { BadRequest } from "http-errors";
 import Busboy from "busboy";
 
 import { PROPERTY_UPLOADED, Middleware, DataFile } from "../index";
+import { ControllerOptions } from "../declarations";
 import { RocketBase } from "../base";
 
 export class FileService extends RocketBase {
+  constructor(private readonly params: ControllerOptions) {
+    super(params.path);
+  }
+
   create(): Middleware<void> {
     return async (req: Request, _: Response, next: NextFunction) => {
       const serviceName = req.params.service;
@@ -13,10 +18,11 @@ export class FileService extends RocketBase {
       const service = this.getService(serviceName);
 
       if (!service) {
-        return next(new Error(`The ${ serviceName } rocket not register`));
+        return next(new Error(`The ${serviceName} rocket not register`));
       }
 
       const busboy = new Busboy({
+        ...this.params.options,
         headers: req.headers,
         limits: { files: 1 }
       });
@@ -57,7 +63,7 @@ export class FileService extends RocketBase {
         const service = this.getService(serviceName);
 
         if (!service) {
-          return next(new Error(`The ${ serviceName } rocket not register`));
+          return next(new Error(`The ${serviceName} rocket not register`));
         }
 
         if (typeof service?.list !== "function") {
@@ -79,11 +85,12 @@ export class FileService extends RocketBase {
       try {
         const serviceName = req.params.service;
         const { path = "" } = req.query;
+        if (!path) return next(new BadRequest("The <path> property is required."));
 
         const service = this.getService(serviceName);
 
         if (!service) {
-          return next(new Error(`The ${ serviceName } rocket not register`));
+          return next(new Error(`The ${serviceName} rocket not register.`));
         }
 
         if (typeof service?.remove !== "function") {
