@@ -12,7 +12,7 @@ export interface Query {
 export type Id = string | number;
 
 export interface DataDir extends Query {
-  name: string;
+  path: string;
 }
 
 export interface DataFile {
@@ -156,8 +156,17 @@ export interface ServiceMethods<T = DataFile, K = DataResult> {
 }
 
 export interface RouterParams<T, K> {
+  /**
+   * Class or object that manages files and directories.
+   * For more informaticion visit: https://github.com/IvanZM123/filesrocket#services
+   */
   service: Partial<ServiceMethods<T, K>>;
   controller: RocketMethods;
+  /**
+   * Functions that are executed **before** or **after** 
+   * performing an action *create*, *list* or *remove*
+   * For more information visit: https://github.com/IvanZM123/filesrocket#hooks
+   */
   hooks?: Hooks;
 }
 

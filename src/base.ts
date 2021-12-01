@@ -1,19 +1,16 @@
-import { Router } from "express";
-
-import {
-  DataFile,
-  DataResult,
-  RouterParams,
-  ServiceMethods,
-  TypeServices
-} from "./index";
+import { DataFile, DataResult, RouterParams, ServiceMethods, TypeServices } from "./index";
 import { HandlerOptions, serviceHandler } from "./hooks";
+import { Router } from "express";
 
 interface Entity<T, K> {
   /**
    * Represents the strategy of a service.
    */
   service: Partial<ServiceMethods<T, K>>;
+  /**
+   * A Router instance is a complete addressing and middleware system.
+   * For more information visit: https://expressjs.com/es/4x/api.html#router
+   */
   router: Router;
 }
 

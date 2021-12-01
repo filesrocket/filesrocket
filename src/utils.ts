@@ -12,31 +12,35 @@ import uniqid from "uniqid";
   return uniqid(`${ parseName }-`) + ext;
 }
 
-export type FunctionPredicate<T, K extends keyof T> = (entity: T, value: any, key: K) => Partial<boolean>;
+export type FunctionPredicate<T, K> = (
+  entity: T,
+  value: any,
+  key: K
+) => Boolean;
 
 function transform<T, K extends keyof T>(
-  value: T,
+  obj: T,
   predicate: FunctionPredicate<T, K>
-): Partial<T> {
-  const target = Object.assign({}, value);
-  
-  return Object.keys(target).reduce((memo, key) => {
-    const item = key as K;
-    const entity = memo as T;
+) {
+  return Object.keys(obj).reduce((prev, curr) => {
+    const key = curr as K;
+    const memo = prev as T;
 
-    if(predicate(entity, entity[item], item)) entity[item] = entity[item];
+    if (predicate(obj, obj[key], key)) {
+      memo[key] = obj[key];
+    }
+
     return memo;
   }, {});
 }
 
 /**
  * Omit properties.
- * @param payload Payload
- * @param properties Properties to omit.
- * @returns 
+ * @param obj Entity.
+ * @param items Properties.
  */
-export const omitProps = <T, K extends keyof T>(entity: T, properties: K[]) =>
-  transform(entity, (_, __, key) => properties.includes(key as K));
+export const omitProps = <T, K extends keyof T>(obj: T, items: K[]) =>
+  transform(obj, (_, __, key) => !items.includes(key as K));
 
 /**
  * Managenment promise.

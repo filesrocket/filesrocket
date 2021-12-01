@@ -3,6 +3,10 @@ import { DataFile } from "./index";
 
 export type FunctionStrategy<T> = (filename: T) => T;
 
+/**
+ * Generates a unique filename.
+ * @param strategy Function that customizes the creation of the filename.
+ */
 export function ParseFilename(strategy?: FunctionStrategy<string>) {
   return function (
     _: Object,

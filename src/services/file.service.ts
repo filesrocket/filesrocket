@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { BadRequest } from "http-errors";
+import { BadRequest } from "../errors";
 import Busboy from "busboy";
 
 import { PROPERTY_UPLOADED, Middleware, DataFile } from "../index";
