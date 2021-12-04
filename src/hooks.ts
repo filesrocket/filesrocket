@@ -1,42 +1,38 @@
+import { ControllerMethods, Middleware, PROPERTY_UPLOADED } from "./declarations";
 import { Request, Response, NextFunction } from "express";
 
-import { PROPERTY_UPLOADED, RocketMethods } from "./declarations";
-import { Middleware } from "./index";
-
-export interface MethodsHook<T = void> {
-  create: Middleware<T>[];
-  list: Middleware<T>[];
-  remove: Middleware<T>[];
+export interface HooksMethods {
+  create: Middleware[];
+  list: Middleware[];
+  remove: Middleware[];
 }
 
 export interface Hooks {
-  after: Partial<MethodsHook>;
-  before: Partial<MethodsHook>;
+  before?: Partial<HooksMethods>;
+  after?: Partial<HooksMethods>;
 }
 
-function formatter(length: number): Middleware<void> {
+function formatter(length: number): Middleware {
   return (req: Request, res: Response, next: NextFunction) => {
-    length > 0 ? next() : res.status(200).json((req as any)[PROPERTY_UPLOADED]);
+    if (length > 0) return next();
+    res.status(200).json((req as any)[PROPERTY_UPLOADED]);
   }
 }
 
-export interface HandlerOptions {
-  method: keyof MethodsHook;
-  hooks?: Partial<Hooks>;
-  controller: RocketMethods;
-}
-
-export function serviceHandler(options: HandlerOptions): Middleware<void>[] {
-  const { hooks = {}, method, controller } = options;
-  const beforeHook: Partial<MethodsHook> = hooks.before || {};
-  const afterHook: Partial<MethodsHook> = hooks.after || {};
+export function serviceHandler(
+  rocket: ControllerMethods,
+  method: keyof HooksMethods,
+  hooks: Partial<Hooks> = {}
+): Middleware[] {
+  const beforeHook: Partial<HooksMethods> = hooks.before || {};
+  const afterHook: Partial<HooksMethods> = hooks.after || {};
 
   const before = beforeHook[method] || [];
   const after = afterHook[method] || [];
 
   return [
     ...before,
-    controller[method](),
+    rocket[method](),
     formatter(after.length),
     ...after,
     formatter(0)

@@ -1,182 +1,79 @@
 import { NextFunction, Request, Response } from "express";
 import { Hooks } from "./hooks";
 
-export const PROPERTY_UPLOADED = "filesUploaded";
-
-export type TypeServices = "Files" | "Directories";
-
 export interface Query {
   [key: string]: any;
 }
 
-export type Id = string | number;
+export const PROPERTY_UPLOADED = "uploaded";
 
-export interface DataDir extends Query {
-  path: string;
-}
+export type TypeEntities = "Files" | "Directories";
 
-export interface DataFile {
-  /**
-   * Filename. For example: picture.png, songs.mp3 and more...
-   */
-  filename: string;
-  /**
-   * Name of the form input.
-   */
-  fieldname: string;
-  /**
-   * File in ReadableStream
-   */
-  file: NodeJS.ReadableStream;
-  /**
-   * Encoding type.
-   */
-  encoding: string;
-  /**
-   * Type of file. For example: image/jpg
-   */
-  mimetype: string;
-}
-
-export interface DataResult extends Query {
-  /**
-   * File name.
-   */
-  name: string;
-  /**
-   * File size.
-   */
-  size: number;
-  /**
-   * File extension.
-   */
-  ext: string;
-  /**
-   * Directory where the file is located.
-   */
-  dir: string;
-  /**
-   * URL file.
-   */
-  url: string;
-  /**
-   * File creation date.
-   */
-  createdAt: Date;
-  /**
-   * File update date.
-   */
-  updatedAt: Date;
-}
-
-export interface Options {
-  highWaterMark: number | undefined;
-  fileHwm: number | undefined;
-  defCharset: string | undefined;
-  preservePath: boolean | undefined;
-  limits: {
-    fieldNameSize?: number | undefined;
-    fieldSize?: number | undefined;
-    fields?: number | undefined;
-    fileSize?: number | undefined;
-    files?: number | undefined;
-    parts?: number | undefined;
-    headerPairs?: number | undefined;
-  } | undefined;
-}
-
-export interface Pagination {
-  /**
-   * Items by default.
-   */
-  default: number;
-  /**
-   * Maximun items.
-   */
-  max: number;
-}
-
-export interface Paginated<T> {
-  /**
-   * List of resources.
-   */
-  items: T[];
-  /**
-   * Recources delivered.
-   */
-  size: number;
-  /**
-   * Total resources.
-   */
-  total: number;
-  /**
-   * Current page.
-   */
-  pageToken: Id | null;
-  /**
-   * Next page.
-   */
-  nextPageToken: Id | null;
-  /**
-   * Previous page.
-   */
-  prevPageToken: Id | null;
-}
-
-export interface RocketMethods<T = void> {
-  create(): Middleware<T>;
-  list(): Middleware<T>;
-  remove(): Middleware<T>;
-}
-
-export interface ServiceMethods<T = DataFile, K = DataResult> {
-  /**
-   * Create a new resource.
-   * @param data Payload.
-   * @param query Parameters.
-   */
-  create(data: T, query?: Query): Promise<K>;
-  /**
-   * Get a list of resources.
-   * @param query Parameters.
-   */
-  list(query?: Query): Promise<Paginated<K> | K[]>;
-  /**
-   * Get a resource.
-   * @param id Resource identity.
-   * @param query Parameters.
-   */
-  get(id: string, query?: Query): Promise<K>;
-  /**
-   * Delete a file.
-   * @param id Resource identity.
-   * @param query Parameters.
-   */
-  remove(id: string, query?: Query): Promise<K>;
-}
-
-export interface RouterParams<T, K> {
-  /**
-   * Class or object that manages files and directories.
-   * For more informaticion visit: https://github.com/IvanZM123/filesrocket#services
-   */
-  service: Partial<ServiceMethods<T, K>>;
-  controller: RocketMethods;
-  /**
-   * Functions that are executed **before** or **after** 
-   * performing an action *create*, *list* or *remove*
-   * For more information visit: https://github.com/IvanZM123/filesrocket#hooks
-   */
-  hooks?: Hooks;
-}
-
-export interface ControllerOptions {
-  options?: Partial<Options>;
-  path: string;
-}
-
-export type Middleware<T> = (
+export type Middleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => Promise<T> | T;
+) => Promise<void> | void;
+
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+  page: string | number | null;
+  nextPageToken: string | null;
+  prevPageToken: string | null;
+}
+
+export interface Entity extends Query {
+  name: string;
+  size: number;
+  ext: string;
+  dir: string;
+  stream: NodeJS.ReadStream;
+  url: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface ServiceMethods<T> {
+  /**
+   * Create a new entity.
+   * @param data Data.
+   * @param query Query.
+   */
+  create(data: Partial<T>, query?: Query): Promise<T>;
+  /**
+   * Gets a list of entities.
+   * @param query Query.
+   */
+  list(query?: Query): Promise<Paginated<T> | T[]>;
+  /**
+   * Remove a entity.
+   * @param id Identifier.
+   * @param query Query.
+   */
+  remove(id: string, query?: Query): Promise<T>;
+}
+
+export interface ControllerMethods {
+  /**
+   * Control the creation of an entity.
+   */
+  create(): Middleware;
+  /**
+   * Control the list of entities.
+   */
+  list(): Middleware;
+  /**
+   * Control the deletion of entities
+   */
+  remove(): Middleware;
+}
+
+export interface RouterParams {
+  path: string;
+  services: {
+    name: string;
+    service: ServiceMethods<any>;
+    hooks?: Hooks;
+  }[];
+}

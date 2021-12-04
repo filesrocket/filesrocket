@@ -4,7 +4,7 @@ import uniqid from "uniqid";
  * Generate a unique filename.
  * @param filename Filename.
  */
- export function generateRandomFilename(filename: string): string {
+export function generateRandomFilename(filename: string): string {
   const [_, name, ext] = filename.match(/(.+?)(\.[^.]*$|$)/) || [];
 
   const parseName: string | undefined = name.match(/([A-Za-z0-9])+/g)?.join("-");
@@ -41,17 +41,3 @@ function transform<T, K extends keyof T>(
  */
 export const omitProps = <T, K extends keyof T>(obj: T, items: K[]) =>
   transform(obj, (_, __, key) => !items.includes(key as K));
-
-/**
- * Managenment promise.
- * @param promise Promise.
- */
-export async function handlerPromise<T>(
-  promise: Promise<T>
-): Promise<[T | null, any]> {
-  try {
-    return [await promise, null];
-  } catch (error) {
-    return [null, error];
-  }
-}
