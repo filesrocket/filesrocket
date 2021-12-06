@@ -1,7 +1,8 @@
 import { Router } from "express";
 
-import { ControllerMethods, RouterParams, TypeEntities } from "./declarations";
-import { serviceHandler } from "./hooks";
+import { DirectoryController, FileController } from "./index";
+import { RouterParams, TypeEntities } from "./declarations";
+import { Handler, serviceHandler } from "./hooks";
 
 export class RocketRouter {
   /**
@@ -11,15 +12,33 @@ export class RocketRouter {
   static forRoot(data: RouterParams): Router {
     const router = Router();
 
-    data.services.forEach(item => {
-      const controller = (item.service as any).controller as ControllerMethods | undefined;
-      const type = (item.service as any).type as TypeEntities;
-      if (!controller) throw new Error("Add the Service controller to your service.");
+    data.services.forEach((item) => {
+      const service = item.service as any;
+      const Controller = service.controller as
+        | typeof FileController
+        | typeof DirectoryController
+        | undefined;
+      const type = service.entityType as TypeEntities;
+      const name = item.name || service.serviceName;
 
-      const path: string = `/${ data.path }/${ item.name }/${ type.toLowerCase() }`;
-      router.get(path, serviceHandler(controller, "list", item.hooks));
-      router.post(path, serviceHandler(controller, "create", item.hooks));
-      router.delete(path, serviceHandler(controller, "remove", item.hooks));
+      if (!Controller) {
+        throw new Error("Add the @Service controller to your service.");
+      }
+
+      const controller = new Controller(service);
+      const path: string = `/${data.path}/${name}/${type.toLowerCase()}`;
+      const options: Omit<Handler, "method"> = { controller, hooks: item.hooks };
+
+      router.get(path, serviceHandler({ ...options, method: "list" }));
+      router.post(
+        path,
+        serviceHandler({
+          ...options,
+          method: "create",
+          query: data.options
+        })
+      );
+      router.delete(path, serviceHandler({ ...options, method: "remove" }));
     });
 
     return router;

@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
-import { ControllerMethods, Middleware, ServiceMethods } from "../declarations";
+import { ControllerMethods, Middleware, Service, DirectoryEntity } from "../declarations";
 
 export class DirectoryController implements Partial<ControllerMethods> {
-  constructor(private readonly service: ServiceMethods<any>) {}
+  constructor(private readonly service: Service<DirectoryEntity>) {}
 
   create(): Middleware {
     return (req: Request, _: Response, next: NextFunction) => {

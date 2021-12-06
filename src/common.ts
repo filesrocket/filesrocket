@@ -1,35 +1,33 @@
-import { ControllerMethods, TypeEntities } from "./declarations";
 import { generateRandomFilename } from "./utils";
+import { TypeEntities } from "./declarations";
 
 import { DirectoryController } from "./controllers/directory.controller";
 import { FileController } from "./controllers/file.controller";
 
 export interface ServiceOptions {
+  name: string;
   type: TypeEntities;
-  controller?: ControllerMethods;
 }
 
 /**
- * Decorator that marks a class as a filesrocket service 
- * and provides configuration metadata that determines 
- * how the service should be processed, instantiated, 
- * and used at run time.
- * 
+ * Decorator that sets the controller to use to manage entities
+ * based on their type (Files or Directories). In addition
+ * to specifying the name of the service.
+ *
  * **Note:** It is mandatory to decorate a class when you 
- * need to create a custom service.
+ * need to create a custom service. 
  * @param options Options.
  */
 export function Service(options: ServiceOptions) {
   return (constructor: Function) => {
-    const { type } = options;
+    const { type, name } = options;
 
-    const controller = type === "Directories"
-      ? new DirectoryController(constructor.prototype)
-      : new FileController(constructor.prototype);
+    const controller = type !== "Directories" ? FileController : DirectoryController;
 
-    constructor.prototype.type = type;
+    constructor.prototype.entityType = type;
+    constructor.prototype.serviceName = name;
     constructor.prototype.controller = controller;
-  };
+  }
 }
 
 export type FunctionStrategy<T> = (data: T) => T;
