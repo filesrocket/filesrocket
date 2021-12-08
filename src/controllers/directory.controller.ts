@@ -1,30 +1,33 @@
 import { NextFunction, Request, Response } from "express";
-import { ControllerMethods, Middleware, Service, DirectoryEntity } from "../declarations";
+import { BadRequest, NotImplemented } from "http-errors";
 
-export class DirectoryController implements Partial<ControllerMethods> {
-  constructor(private readonly service: Service<DirectoryEntity>) {}
+import { ControllerMethods, Middleware, Service, DirectoryEntity } from "../declarations";
+import { BaseController } from "./base.controller";
+import { ROCKET_RESULT } from "../index";
+
+export class DirectoryController extends BaseController implements ControllerMethods {
+  constructor(protected readonly service: Service<DirectoryEntity>) {
+    super(service);
+  }
 
   create(): Middleware {
-    return (req: Request, _: Response, next: NextFunction) => {
-      console.log(req.query);
-      console.log(this.service);
-      next();
-    }
-  }
+    return async (req: Request, _: Response, next: NextFunction) => {
+      try {
+        if (typeof this.service.create !== "function") {
+          return next(new NotImplemented("The create method not implemented."));
+        }
 
-  list(): Middleware {
-    return (req: Request, _: Response, next: NextFunction) => {
-      console.log(req.query);
-      console.log(this.service);
-      next();
-    }
-  }
+        if (!Object.keys(req.body).length) {
+          return next(new BadRequest("The body of the request is empty."));
+        }
 
-  remove(): Middleware {
-    return (req: Request, _: Response, next: NextFunction) => {
-      console.log(req.query);
-      console.log(this.service);
-      next();
+        const data = await this.service.create(req.body, req.query);
+        Object.defineProperty(req, ROCKET_RESULT, { value: data });
+
+        next();
+      } catch (error) {
+        next(error);
+      }
     }
   }
 }

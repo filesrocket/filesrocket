@@ -1,13 +1,15 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequest } from "http-errors";
 import Busboy from "busboy";
 
 import { ControllerMethods, Middleware, Service, FileEntity, ROCKET_RESULT } from "../declarations";
+import { BaseController } from "./base.controller";
 import { NotImplemented } from "../errors";
 import { Query } from "../index";
 
-export class FileController implements ControllerMethods {
-  constructor(private readonly service: Service<FileEntity>) {}
+export class FileController extends BaseController implements ControllerMethods {
+  constructor(protected readonly service: Service<FileEntity>) {
+    super(service);
+  }
 
   create(query?: Query): Middleware {
     return (req: Request, _: Response, next: NextFunction) => {
@@ -38,44 +40,6 @@ export class FileController implements ControllerMethods {
         req.on("error", (err) => next(err));
 
         req.pipe(busboy);
-      } catch (error) {
-        next(error);
-      }
-    }
-  }
-
-  list(): Middleware {
-    return async (req: Request, _: Response, next: NextFunction) => {
-      try {
-        if (typeof this.service.list !== "function") {
-          return next(new NotImplemented("The list method not implemented."));
-        }
-
-        const data = await this.service.list(req.query);
-        Object.defineProperty(req, ROCKET_RESULT, { value: data });
-
-        next();
-      } catch (error) {
-        next(error);
-      }
-    }
-  }
-
-  remove(): Middleware {
-    return async (req: Request, _: Response, next: NextFunction) => {
-      try {
-        if (typeof this.service.remove !== "function") {
-          return next(new NotImplemented("The remove method not implemented."));
-        }
-
-        if (!req.query.id) {
-          return next(new BadRequest("The id property is required."));
-        }
-
-        const data = await this.service.remove(String(req.query.id), req.query);
-        Object.defineProperty(req, ROCKET_RESULT, { value: data });
-
-        next();
       } catch (error) {
         next(error);
       }
