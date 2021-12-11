@@ -41,3 +41,5 @@ export {
   LoopDetected,
   BandwidthLimitExceeded
 } from "http-errors";
+import _createHttpError from "http-errors";
+export const createHttpError = _createHttpError;
