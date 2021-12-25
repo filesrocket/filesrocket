@@ -1,13 +1,11 @@
 {
+  "include": ["src/**/*.ts"],
   "compilerOptions": {
-    /* Visit https://aka.ms/tsconfig.json to read more about this file */
-
     /* Language and Environment */
     "target": "ES2018",
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": "./src",                                  /* Specify the root folder within your source files. */
 
     /* Emit */
     "declaration": true,                              /* Generate .d.ts files from TypeScript and JavaScript files in your project. */
@@ -25,6 +23,9 @@
     "noUnusedLocals": true,                           /* Enable error reporting when a local variables aren't read. */
     "noUnusedParameters": true,                          /* Interpret optional property types as written, rather than adding 'undefined'. */
     "noImplicitReturns": true,                        /* Enable error reporting for codepaths that do not explicitly return in a function. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */,
+
+    /* Experimental */
+    "experimentalDecorators": true
   }
 }

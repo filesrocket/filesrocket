@@ -72,13 +72,13 @@ export interface ResultEntity extends Query {
   updatedAt: Date;
 }
 
-export interface ServiceMethods<T = FileEntity, K = ResultEntity> {
+export interface ServiceMethods<T = Partial<FileEntity>, K = Partial<ResultEntity>> {
   /**
    * Create a new entity.
    * @param data Data.
    * @param query Query.
    */
-  create(data: Partial<T>, query?: Query): Promise<K>;
+  create(data: T, query?: Query): Promise<K>;
   /**
    * Gets a list of entities.
    * @param query Query.
