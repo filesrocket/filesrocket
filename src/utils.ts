@@ -39,5 +39,5 @@ function transform<T, K extends keyof T>(
  * @param obj Entity.
  * @param items Properties.
  */
-export const omitProps = <T, K extends keyof T>(obj: T, items: K[]) =>
+export const omitProps = <T, K extends keyof T>(obj: T, items: K[]): Partial<T> =>
   transform(obj, (_, __, key) => !items.includes(key as K));
