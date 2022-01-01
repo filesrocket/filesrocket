@@ -88,6 +88,37 @@ In the event that its operation has not been clear to you, or you have problems 
 | filesrocket-react-app | https://github.com/IvanZM123/filesrocket-react-app |
 | filesrocket-server-app | https://github.com/IvanZM123/filesrocket-server-app |
 
+### Upload files.
+This section shows the properties to upload a file.
+
+#### Required Parameters.
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| File | File | Represent a file (Buffer). multipart/form-data |
+
+#### Optional Parameters.
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| Path | String | You can specify the path where the file is saved. Please note that directories are created recursively. |
+
+### List files.
+This section shows the properties to list a files.
+
+#### Optional Parameters.
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| path | String | Specify the folder where you want to get the files. |
+| size | String | Specify the number of files or directories to be obtained. |
+| page | String | When a request has more results to return than **size**, the **size** value is returned as part of the response. You can then specify this value as the **page** parameter of the following request. Note that the values change according to the service you are using. |
+
+### Remove file.
+This section shows the properties to list a files.
+
+#### Required parameters.
+| Parameter | Type | Description |
+| --------- | ---- | ----------- |
+| id | String | Represents the identifier of the file. |
+
 ## Services.
 A service is a predefined class that allows you to manage an entity either files or directories. This classes are composed by a decorator names *Service* and interface named *ServiceMethods* To understand better, follow the example below.
 
@@ -118,6 +149,60 @@ export class MyService implements ServiceMethods<any> {
 
 > **Note**: Note that when you create a service and set the type and its name, this is how the routes are formed. For example: If the type of service has entity **files** and name **azure**, its path will be **/azure/files**
 
+### Customized services.
+You may want to create your own services. For this it is very important to take into account the following.
+
+**Step 1**: Create a class that implements the following interface.
+
+```ts
+export class MyCustomizeService implements ServiceMethods {}
+```
+
+**Step 2**: We are add the *Service* decorator.
+
+```ts
+@Service({
+  type: "Files",
+  name: "dropbox"
+})
+export class MyCustomizeService implements ServiceMethods {}
+```
+
+As you can see, this service will handle files and its name is dropbox. When this service is added to the routes, it will be accessed as follows: `/dropbox/files`
+
+### Parameters that the events receive.
+
+**Upload File**. When you want to upload a file, keep in mind that the following parameters will always be sent to you.
+
+```ts
+{
+  /**
+   * Filename. For example: picture.png, songs.mp3 and more...
+   */
+  name: string;
+  /**
+   * Name of the form input.
+   */
+  fieldname: string;
+  /**
+   * File in ReadableStream.
+   */
+  stream: NodeJS.ReadableStream;
+  /**
+   * Encoding type.
+   */
+  encoding: string;
+  /**
+   * Type of file. For example: image/jpg
+   */
+  mimetype: string;
+}
+```
+
+**List files**: When you want to list files you will always receive a **query**, this is obtained from `req.query`
+
+**Remove file**: When you want to delete files you will always receive the **id** of the file to delete (this can be a url, or any way to identify the file) and a **query**, this is obtained from `req.query`
+
 #### More services.
 The rockets are pre-made classes for you to manage your files with various cloud storage services, such as Cloudinary, AWS S3 and other providers.
 
@@ -144,10 +229,34 @@ RocketRouter.forRoot({
 
 #### Params.
 
-| property | description                              | Format |
-| -------- | ---------------------------------------- | ------ |
-| path     | Represents the base path of your service | String |
-| services | This a list of all your services         | Array  |
+```td
+{
+  /**
+   * Represent the route base.
+   */
+  path: string;
+  /**
+   * A list of all available services.
+   */
+  services: {
+    /**
+     * This property allows you to change
+     * the name of the service. Optional.
+     */
+    name?: string;
+    /**
+     * Class that implement the interface **ServiceMethods**
+     * and decorator **Service**
+     */
+    service: Partial<ServiceMethods>;
+    /**
+     * Functions that run before or after an event is performed.
+     * For more informations: https://github.com/IvanZM123/filesrocket#hooks
+     */
+    hooks: Hooks;
+  }[];
+}
+```
 
 ## Hooks.
 The hooks in filesrocket, are functions that are executed **before** or **after** performing an action **create**, **list** or **remove**

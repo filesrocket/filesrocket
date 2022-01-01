@@ -43,6 +43,10 @@ export interface DirectoryEntity extends Query {
 
 export interface ResultEntity extends Query {
   /**
+   * Identifier entity.
+   */
+  id: string;
+  /**
    * Name of the entity.
    */
   name: string;
