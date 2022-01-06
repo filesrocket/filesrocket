@@ -1,4 +1,4 @@
-![filesrocket new logo](https://user-images.githubusercontent.com/64434514/148064916-cfa6d14e-35cc-4d45-a683-d54333996e4a.png)
+![filesrocket logo](https://user-images.githubusercontent.com/64434514/148323581-1afc535f-fb2b-4e81-808a-19afe5b4c7c9.png)
 
 ## Filesrocket allows you to manage your files and directories with any cloud service.
 
