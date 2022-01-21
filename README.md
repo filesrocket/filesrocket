@@ -1,4 +1,4 @@
-![Filesrocket Banner](https://res.cloudinary.com/dlkfpx8lb/image/upload/v1639523151/wallpaper_rbiss8.png)
+![filesrocket logo](https://user-images.githubusercontent.com/64434514/148323581-1afc535f-fb2b-4e81-808a-19afe5b4c7c9.png)
 
 ## Filesrocket allows you to manage your files and directories with any cloud service.
 
@@ -271,8 +271,10 @@ function isLoggedIn(req, res, next) {
 
 function sendMail(req, res, next) {
   MailService.send({
+    from: "support@filesrocket.com",
     to: req.user.email,
-    html: "You have uploaded a file"
+    subject: "Uploaded file",
+    html: "<h1>You have uploaded a file!</h1>"
   });
   return next();
 }
