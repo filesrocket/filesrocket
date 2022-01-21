@@ -13,7 +13,7 @@ export type Middleware = (
   req: Request,
   res: Response,
   next: NextFunction
-) => Promise<void> | void;
+) => Promise<any> | any;
 
 export interface Pagination {
   default: number;

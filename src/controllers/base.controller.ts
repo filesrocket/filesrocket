@@ -14,8 +14,8 @@ export class BaseController implements Omit<ControllerMethods, "create"> {
         }
 
         const data = await this.service.list(req.query);
-        Object.defineProperty(req, ROCKET_RESULT, { value: data });
 
+        req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
         next();
       } catch (error) {
         next(error);
@@ -35,8 +35,8 @@ export class BaseController implements Omit<ControllerMethods, "create"> {
         }
 
         const data = await this.service.remove(String(req.query.id), req.query);
-        Object.defineProperty(req, ROCKET_RESULT, { value: data });
 
+        req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
         next();
       } catch (error) {
         next(error);

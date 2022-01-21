@@ -22,8 +22,8 @@ export class DirectoryController extends BaseController implements ControllerMet
         }
 
         const data = await this.service.create(req.body, req.query);
-        Object.defineProperty(req, ROCKET_RESULT, { value: data });
 
+        req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
         next();
       } catch (error) {
         next(error);
