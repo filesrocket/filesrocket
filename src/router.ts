@@ -35,7 +35,7 @@ export class RocketRouter {
         serviceHandler({
           ...options,
           method: "create",
-          query: data.options
+          query: item.options
         })
       );
       router.delete(path, serviceHandler({ ...options, method: "remove" }));

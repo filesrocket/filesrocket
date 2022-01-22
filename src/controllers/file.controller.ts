@@ -7,23 +7,23 @@ import {
   Service,
   FileEntity,
   ROCKET_RESULT,
-  Query
+  UploadOptions
 } from "../declarations";
 import { BaseController } from "./base.controller";
-import { NotImplemented } from "../errors";
+import { BadRequest, NotImplemented } from "../errors";
 
 export class FileController extends BaseController implements ControllerMethods {
   constructor(protected readonly service: Service<FileEntity>) {
     super(service);
   }
 
-  create(query?: Query): Middleware {
+  create(query: Partial<UploadOptions> = {}): Middleware {
     return (req: Request, _: Response, next: NextFunction) => {
       try {
         const busboy = new Busboy({
+          ...query,
           headers: req.headers,
-          limits: { files: 1 },
-          ...query
+          limits: { files: 1 }
         });
 
         busboy.on("field", (fieldname, value) => {
@@ -31,10 +31,7 @@ export class FileController extends BaseController implements ControllerMethods 
         });
 
         busboy.on("file", async (fieldname, stream, name, encoding, mimetype) => {
-          if (typeof this.service.create !== "function") {
-            return next(new NotImplemented("The create method not implemented"));
-          }
-
+          const exts: string[] = query.allowedExts || [];
           const payload: FileEntity = {
             fieldname,
             stream,
@@ -43,8 +40,32 @@ export class FileController extends BaseController implements ControllerMethods 
             mimetype
           }
 
-          const data = await this.service.create(payload, req.query);
+          if (typeof this.service.create !== "function") {
+            return next(new NotImplemented("The create method not implemented."));
+          }
 
+          if (fieldname !== "file") {
+            return next(new BadRequest("The file field does not exist."));
+          }
+
+          if (!name) {
+            return next(new BadRequest("The file field is empty."));
+          }
+
+          if (!exts.length) {
+            const data = await this.service.create(payload, req.query);
+            req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
+            return next();
+          }
+
+          const [ext]: string[] = name.match(/\.([0-9a-z]+)(?:[\?#]|$)/g) || [];
+
+          if (!exts.includes(ext)) {
+            const extensions = exts.join(", ");
+            return next(new BadRequest(`The ${ext} extension is not allowed. Consider using: ${extensions}`));
+          }
+
+          const data = await this.service.create(payload, req.query);
           req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
           next();
         });

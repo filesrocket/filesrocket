@@ -16,21 +16,53 @@ export type Middleware = (
 ) => Promise<any> | any;
 
 export interface Pagination {
+  /**
+   * Represents the number of entities that can be obtained
+   * by default in a request.
+   */
   default: number;
+  /**
+   * Represents the maximum number of entities that can be
+   * listed in a request.
+   */
   max: number;
 }
 
 export interface Paginated<T> {
+  /**
+   * Represents a list of entities.
+   */
   items: T[];
+  /**
+   * Represents the total of the entities
+   */
   total: number;
+  /**
+   * Represents the number of entities obtained in the request.
+   */
   size: number;
+  /**
+   * Represents the current page.
+   */
   page: string | number | undefined;
+  /**
+   * Represents if there are more pages to display, keep in mind
+   * that this property will only be present when there are more
+   * entities to return.
+   */
   nextPageToken: string | number | undefined;
+  /**
+   * Represents the previous page.
+   */
   prevPageToken: string | number | undefined;
 }
 
 export interface FileEntity {
   name: string;
+  /**
+   * Represent a Readable of Node.js. For more information visit:
+   * https://nodejs.org/api/stream.html#readable-streams
+   */
   stream: NodeJS.ReadableStream;
   fieldname: string;
   encoding: string;
@@ -98,15 +130,15 @@ export interface ServiceMethods<T = Partial<FileEntity>, K = Partial<ResultEntit
 
 export interface ControllerMethods {
   /**
-   * Control the creation of an entity.
+   * Middleware reponsible of the creation of an entity.
    */
   create(params?: Query): Middleware;
   /**
-   * Control the list of entities.
+   * Middleware reponsible of the list of entities.
    */
   list(params?: Query): Middleware;
   /**
-   * Control the deletion of entities
+   * Middleware reponsible of the deletion of entities.
    */
   remove(params?: Query): Middleware;
 }
@@ -127,6 +159,7 @@ export interface UploadOptions {
     parts?: number | undefined;
     headerPairs?: number | undefined;
   } | undefined;
+  allowedExts: string[];
 }
 
 export interface ServiceRouter {
@@ -145,6 +178,11 @@ export interface ServiceRouter {
    * administration of entities.
    */
   service: Partial<ServiceMethods<any, any>>;
+    /**
+   * Options. For more informarion visit the following
+   * link: https://www.npmjs.com/package/busboy#busboy-methods
+   */
+  options?: Partial<UploadOptions>;
 }
 
 export interface RouterParams {
@@ -152,11 +190,6 @@ export interface RouterParams {
    * Root path.
    * */
   path: string;
-  /**
-   * Options. For more informarion visit the following
-   * link: https://www.npmjs.com/package/busboy#busboy-methods
-   */
-  options?: UploadOptions;
   /** 
    * List of services.
    * */
