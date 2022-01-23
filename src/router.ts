@@ -29,7 +29,6 @@ export class RocketRouter {
       const path: string = `/${data.path}/${name}/${type.toLowerCase()}`;
       const options: Omit<Handler, "method"> = { controller, hooks: item.hooks };
 
-      router.get(path, serviceHandler({ ...options, method: "list" }));
       router.post(
         path,
         serviceHandler({
@@ -38,6 +37,7 @@ export class RocketRouter {
           query: item.options
         })
       );
+      router.get(path, serviceHandler({ ...options, method: "list" }));
       router.delete(path, serviceHandler({ ...options, method: "remove" }));
     });
 
