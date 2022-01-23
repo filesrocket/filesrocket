@@ -1,15 +1,13 @@
 import uniqid from "uniqid";
+import { parse } from "path";
 
 /**
  * Generate a unique filename.
  * @param filename Filename.
  */
 export function generateRandomFilename(filename: string): string {
-  const [_, name, ext] = filename.match(/(.+?)(\.[^.]*$|$)/) || [];
-
-  const parseName: string | undefined = name.match(/([A-Za-z0-9])+/g)?.join("-");
-
-  return uniqid(`${ parseName }-`) + ext;
+  const { name, ext } = parse(filename);
+  return uniqid(`${ name }-`) + ext;
 }
 
 export type FunctionPredicate<T, K> = (
