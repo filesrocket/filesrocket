@@ -50,11 +50,11 @@ export interface Paginated<T> {
    * that this property will only be present when there are more
    * entities to return.
    */
-  nextPageToken: string | number | undefined;
+  nextPageToken?: string | number;
   /**
    * Represents the previous page.
    */
-  prevPageToken: string | number | undefined;
+  prevPageToken?: string | number;
 }
 
 export interface FileEntity {
