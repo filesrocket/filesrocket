@@ -10,16 +10,19 @@ const app = express();
 
 const items: Partial<ResultEntity>[] = [
   {
+    id: "1",
     name: "filesrocket.png",
     size: 1234567890,
     dir: "images"
   },
   {
+    id: "2",
     name: "filesrocket-client.png",
     size: 1234567890,
     dir: "images"
   },
   {
+    id: "3",
     name: "filesrocket-local.png",
     size: 1234567890,
     dir: "images"
@@ -42,26 +45,35 @@ class Controller implements ControllerMethods {
   }
 
   remove(): Middleware {
-    return () => {}
+    return (req, _, next) => {
+      const { id } = req.query;
+
+      const index = items.findIndex(item => item.id === id);
+      const entity = items[index];
+      items.splice(index, 1);
+
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: entity });
+      next();
+    }
   }
 }
 
-describe("Hooks for entity creation", () => {
-  const isLoggedIn: Middleware = (req, _, next) => {
-    const { authorization = "" } = req.headers;
-    
-    if (!authorization) {
-      return next(new Unauthorized("You need an access token"));
-    }
-
-    return next();
-  };
-
-  const assingUsername: Middleware = (req, _, next) => {
-    (req as any)[ROCKET_RESULT].username = "IvanZM123";
-    next();
+const isLoggedIn: Middleware = (req, _, next) => {
+  const { authorization = "" } = req.headers;
+  
+  if (!authorization) {
+    return next(new Unauthorized("You need an access token"));
   }
 
+  return next();
+};
+
+const assingUsername: Middleware = (req, _, next) => {
+  (req as any)[ROCKET_RESULT].username = "IvanZM123";
+  next();
+}
+
+describe("Hooks for entity creation", () => {
   app.post("/files", serviceHandler({
     controller: new Controller(),
     method: "create",
@@ -99,17 +111,11 @@ describe("Hooks to list entities", () => {
     next();
   }
 
-  const checkAccessToken: Hook = (req, _, next) => {
-    const { access_token } = req.query;
-    if (!access_token) return next(new Unauthorized("You need access_token"));
-    return next();
-  }
-
   app.get("/files", serviceHandler({
     controller: new Controller(),
     method: "list",
     hooks: {
-      before: [checkAccessToken],
+      before: [isLoggedIn],
       after: [pushFile]
     }
   }));
@@ -123,7 +129,7 @@ describe("Hooks to list entities", () => {
   it("After: Enter an entity in items", (done) => {
     request(app)
       .get("/files")
-      .query({access_token: "kxabweiu"})
+      .set("authorization", "Bearer lnoqw84ns")
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
@@ -134,5 +140,37 @@ describe("Hooks to list entities", () => {
 });
 
 describe("Remove hook", () => {
-  // ...
+  app.delete("/files", serviceHandler({
+    controller: new Controller(),
+    method: "remove",
+    hooks: {
+      before: [isLoggedIn],
+      after: [assingUsername]
+    }
+  }));
+
+  it("Before: Remove entity without token", (done) => {
+    request(app).delete("/files").expect(401, done);
+  });
+
+  it("After: Remove file with token", (done) => {
+    request(app)
+      .delete("/files")
+      .set("authorization", "Bearer cow84cjbjas")
+      .query({id: "1"})
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        
+        assert.deepEqual(res.body,   {
+          id: "1",
+          name: "filesrocket.png",
+          size: 1234567890,
+          dir: "images",
+          username: "IvanZM123"
+        });
+
+        done();
+      });
+  });
 });
