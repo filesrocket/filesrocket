@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { Hooks } from "./hooks";
+import { ObjectHooks } from "./hooks";
 
 export interface Query {
   [key: string]: any;
@@ -172,7 +172,7 @@ export interface ServiceRouter {
    * Hooks are middlewares that are executed before or
    * after creating, listing or removing an entity.
    */
-  hooks?: Partial<Hooks>;
+  hooks?: Partial<ObjectHooks>;
   /**
    * A service is a class, or an object that allows the
    * administration of entities.

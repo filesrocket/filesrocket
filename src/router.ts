@@ -2,7 +2,7 @@ import { Router } from "express";
 
 import { DirectoryController, FileController } from "./index";
 import { RouterParams, TypeEntities } from "./declarations";
-import { Handler, serviceHandler } from "./hooks";
+import { serviceHandler } from "./hooks";
 
 export class RocketRouter {
   /**
@@ -27,18 +27,40 @@ export class RocketRouter {
 
       const controller = new Controller(service);
       const path: string = `/${data.path}/${name}/${type.toLowerCase()}`;
-      const options: Omit<Handler, "method"> = { controller, hooks: item.hooks };
 
-      router.post(
-        path,
-        serviceHandler({
-          ...options,
-          method: "create",
-          query: item.options
-        })
-      );
-      router.get(path, serviceHandler({ ...options, method: "list" }));
-      router.delete(path, serviceHandler({ ...options, method: "remove" }));
+      const { after = {}, before = {} } = item.hooks || {};
+
+      const createHandler = serviceHandler({
+        controller,
+        method: "create",
+        query: item.options,
+        hooks: {
+          after: after.create,
+          before: before.create
+        }
+      });
+
+      const listHandler = serviceHandler({
+        controller,
+        method: "list",
+        hooks: {
+          after: after.list,
+          before: before.list
+        }
+      });
+
+      const removeHandler = serviceHandler({
+        controller,
+        method: "remove",
+        hooks: {
+          after: after.remove,
+          before: before.remove
+        }
+      });
+
+      router.post(path, createHandler);
+      router.get(path, listHandler);
+      router.delete(path, removeHandler);
     });
 
     return router;

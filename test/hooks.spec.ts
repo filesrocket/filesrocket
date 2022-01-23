@@ -8,22 +8,37 @@ import { Unauthorized } from "../src/errors";
 
 const app = express();
 
-const data: Partial<ResultEntity> = {
-  name: "filesrocket.png",
-  size: 123456,
-  url: "http://localhost:3030/uploads/filesrocket.png"
-}
+const items: Partial<ResultEntity>[] = [
+  {
+    name: "filesrocket.png",
+    size: 1234567890,
+    dir: "images"
+  },
+  {
+    name: "filesrocket-client.png",
+    size: 1234567890,
+    dir: "images"
+  },
+  {
+    name: "filesrocket-local",
+    size: 1234567890,
+    dir: "images"
+  }
+];
 
 class Controller implements ControllerMethods {
   create(): Middleware {
     return (req, _, next) => {
-      req = Object.defineProperty(req, ROCKET_RESULT, { value: data });
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: items[0] });
       return next();
     }
   }
 
   list(): Middleware {
-    return () => {}
+    return (req, _, next) => {
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: items });
+      next();
+    }
   }
 
   remove(): Middleware {
@@ -51,12 +66,8 @@ describe("Hooks for entity creation", () => {
     controller: new Controller(),
     method: "create",
     hooks: {
-      before: {
-        create: [isLoggedIn]
-      },
-      after: {
-        create: [assingUsername]
-      }
+      before: [isLoggedIn],
+      after: [assingUsername]
     }
   }));
 
@@ -71,14 +82,21 @@ describe("Hooks for entity creation", () => {
     .expect(200)
     .end((err, res) => {
       if (err) return done(err);
-      assert.deepEqual(res.body, { ...data, username: "IvanZM123" });
+      assert.deepEqual(res.body, { ...items[0], username: "IvanZM123" });
       done();
     });
   });
 });
 
 describe("List hook", () => {
-  // ...
+  // app.get("/files", serviceHandler({
+  //   controller: new Controller(),
+  //   method: "list",
+  //   hooks: {
+  //     before: [],
+  //     after: []
+  //   }
+  // }));
 });
 
 describe("Remove hook", () => {

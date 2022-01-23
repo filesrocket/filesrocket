@@ -9,9 +9,16 @@ export interface HooksMethods {
   remove: Middleware[];
 }
 
-export interface Hooks {
+export interface ObjectHooks {
   before?: Partial<HooksMethods>;
   after?: Partial<HooksMethods>;
+}
+
+export type Hook = Middleware;
+
+export interface Hooks {
+  before: Hook[];
+  after: Hook[];
 }
 
 function formatter(length: number): Middleware {
@@ -29,12 +36,8 @@ export interface Handler {
 }
 
 export function serviceHandler(options: Handler): Middleware[] {
-  const { hooks = {}, method, controller, query } = options;
-  const beforeHook: Partial<HooksMethods> = hooks.before || {};
-  const afterHook: Partial<HooksMethods> = hooks.after || {};
-
-  const before = beforeHook[method] || [];
-  const after = afterHook[method] || [];
+  const { hooks = {}, controller, query } = options;
+  const { before = [], after = [] } = hooks;
 
   return [
     ...before,
