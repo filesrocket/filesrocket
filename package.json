@@ -7,8 +7,7 @@
   "scripts": {
     "serve": "nodemon",
     "build": "tsc -p .",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "test:w": "npm run test -- --watch"
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "keywords": [
     "filemanager",
