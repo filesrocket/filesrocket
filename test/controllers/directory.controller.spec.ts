@@ -15,15 +15,33 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+const items: Partial<ResultEntity>[] = [
+  { name: "images" },
+  { name: "videos" },
+  { name: "audios" },
+  { name: "documents" }
+];
+
 class Service implements Partial<ServiceMethods<DirectoryEntity>> {
-  async create(data: DirectoryEntity): Promise<ResultEntity> {
+  async create(data: DirectoryEntity) {
     return { name: data.name } as any;
+  }
+
+  async list() {
+    return items;
   }
 }
 
 const controller = new DirectoryController(new Service());
 
-app.post("/directories", controller.create(), (req, res) => {
+const PATH: string = "/directories";
+
+app.post(PATH, controller.create(), (req, res) => {
+  const data = (req as any)[ROCKET_RESULT];
+  res.status(200).json(data);
+});
+
+app.get(PATH, controller.list(), (req, res) => {
   const data = (req as any)[ROCKET_RESULT];
   res.status(200).json(data);
 });
@@ -31,7 +49,7 @@ app.post("/directories", controller.create(), (req, res) => {
 describe("Directory creation", () => {
   it("Create directory successfully", (done) => {
     request(app)
-      .post("/directories")
+      .post(PATH)
       .set("Accept", "application/json")
       .send({ name: "images" })
       .expect("Content-Type", /json/)
@@ -48,9 +66,22 @@ describe("Directory creation", () => {
 
   it("Bad Request. The body is null or empty", (done) => {
     request(app)
-      .post("/directories")
+      .post(PATH)
       .set("Accept", "application/json")
       .send({})
       .expect(400, done);
+  });
+});
+
+describe("List directories", () => {
+  it("Get many directories", (done) => {
+    request(app)
+      .get(PATH)
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done(err);
+        assert.equal(res.body.length, items.length);
+        done();
+      });
   });
 });

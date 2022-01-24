@@ -143,7 +143,7 @@ export interface ControllerMethods {
   remove(params?: Query): Middleware;
 }
 
-export type Service<T = FileEntity> = Partial<ServiceMethods<T, ResultEntity>>;
+export type Service<T = FileEntity> = Partial<ServiceMethods<T, Partial<ResultEntity>>>;
 
 export interface UploadOptions {
   highWaterMark: number | undefined;
