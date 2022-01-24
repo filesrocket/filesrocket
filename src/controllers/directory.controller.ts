@@ -17,7 +17,7 @@ export class DirectoryController extends BaseController implements ControllerMet
           return next(new NotImplemented("The create method not implemented."));
         }
 
-        if (!Object.keys(req.body).length) {
+        if (!req.body || !Object.keys(req.body).length) {
           return next(new BadRequest("The body of the request is empty."));
         }
 

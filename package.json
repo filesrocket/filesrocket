@@ -5,7 +5,6 @@
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
-    "serve": "nodemon",
     "build": "tsc -p .",
     "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
