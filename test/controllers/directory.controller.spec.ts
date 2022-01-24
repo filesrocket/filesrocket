@@ -60,7 +60,7 @@ app.delete(PATH, controller.remove(), (req, res) => {
   res.status(200).json(data);
 });
 
-describe("Directory creation", () => {
+describe("Directory controller", () => {
   it("Create directory successfully", (done) => {
     request(app)
       .post(PATH)
@@ -70,10 +70,10 @@ describe("Directory creation", () => {
       .expect(200)
       .end((err, res) => {
         if (err) return done(err);
-
+  
         assert.equal(typeof res.body, "object");
         assert.deepEqual(res.body, { name: "images" });
-
+  
         done();
       });
   });
@@ -85,9 +85,8 @@ describe("Directory creation", () => {
       .send({})
       .expect(400, done);
   });
-});
 
-describe("List directories", () => {
+  
   it("Get many directories", (done) => {
     request(app)
       .get(PATH)
@@ -98,9 +97,8 @@ describe("List directories", () => {
         done();
       });
   });
-});
 
-describe("Remove directories", () => {
+
   it("Remove successfully", (done) => {
     request(app)
       .delete(PATH)
@@ -115,7 +113,7 @@ describe("Remove directories", () => {
         done();
       })
   });
-
+  
   it("Remove failure", (done) => {
     request(app).delete(PATH).expect(400, done);
   });
