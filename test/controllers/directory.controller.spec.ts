@@ -16,10 +16,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const items: Partial<ResultEntity>[] = [
-  { name: "images" },
-  { name: "videos" },
-  { name: "audios" },
-  { name: "documents" }
+  { id: "123", name: "images" },
+  { id: "321", name: "videos" },
+  { id: "231", name: "audios" },
+  { id: "132", name: "documents" }
 ];
 
 class Service implements Partial<ServiceMethods<DirectoryEntity>> {
@@ -29,6 +29,15 @@ class Service implements Partial<ServiceMethods<DirectoryEntity>> {
 
   async list() {
     return items;
+  }
+
+  async remove(id: string): Promise<Partial<ResultEntity>> {
+    const index = items.findIndex(item => item.id === id);
+
+    const data = items[index];
+    items.splice(index, 1);
+
+    return data;
   }
 }
 
@@ -42,6 +51,11 @@ app.post(PATH, controller.create(), (req, res) => {
 });
 
 app.get(PATH, controller.list(), (req, res) => {
+  const data = (req as any)[ROCKET_RESULT];
+  res.status(200).json(data);
+});
+
+app.delete(PATH, controller.remove(), (req, res) => {
   const data = (req as any)[ROCKET_RESULT];
   res.status(200).json(data);
 });
@@ -83,5 +97,26 @@ describe("List directories", () => {
         assert.equal(res.body.length, items.length);
         done();
       });
+  });
+});
+
+describe("Remove directories", () => {
+  it("Remove successfully", (done) => {
+    request(app)
+      .delete(PATH)
+      .query({ id: "123" })
+      .expect(200)
+      .end((err, res) => {
+        if (err) return done();
+        
+        assert.equal(typeof res.body, "object");
+        assert.equal(res.body.id, "123");
+        
+        done();
+      })
+  });
+
+  it("Remove failure", (done) => {
+    request(app).delete(PATH).expect(400, done);
   });
 });
