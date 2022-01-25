@@ -61,7 +61,7 @@ app.delete(PATH, controller.remove(), (req, res) => {
 });
 
 describe("Directory controller", () => {
-  it("Create directory successfully", (done) => {
+  it("Create directory", (done) => {
     request(app)
       .post(PATH)
       .set("Accept", "application/json")
