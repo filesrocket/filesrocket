@@ -1,76 +1,51 @@
-import express, { Request, Response } from "express";
-import { createWriteStream } from "fs";
 import request from "supertest";
 import { resolve } from "path";
 import assert from "assert";
 
-import { FileController } from "../../src/controllers/file.controller";
-import { FileEntity, ResultEntity, ROCKET_RESULT, ServiceMethods } from "../../src";
-
-const app = express();
-
-const items: Partial<ResultEntity>[] = [
-  { id: "1", name: "filesrocket.png", size: 12345 },
-  { id: "2", name: "filesrocket-local.png", size: 54321 },
-  { id: "3", name: "filesrocket-client.png", size: 52413 }
-];
-
-class Service implements Partial<ServiceMethods> {
-  async create(data: FileEntity): Promise<Partial<ResultEntity>> {
-    const writable = createWriteStream(resolve(`uploads/${data.name}`));
-
-    data.stream.pipe(writable);
-
-    return { name: data.name };
-  }
-
-  async list(): Promise<Partial<ResultEntity>[]> {
-    return items;
-  }
-
-  async remove(id: string): Promise<Partial<ResultEntity>> {
-    const index: number = items.findIndex(item => item.id === id);
-
-    const data = items[index];
-    items.splice(index, 1);
-
-    return data;
-  }
-}
-
-const controller = new FileController(new Service());
-const PATH: string = "/files";
-
-const handler = (req: Request, res: Response) => {
-  const data = (req as any)[ROCKET_RESULT];
-  res.status(200).json(data);
-}
-
-app.post(PATH, controller.create(), handler);
-app.get(PATH, controller.list(), handler);
-app.delete(PATH, controller.remove(), handler);
-
+import { app, path, items } from "../api/files.api";
 const supertest = request(app);
 
-describe("File controller.", () => {
-  it("Create file", (done) => {
-    supertest
-      .post(PATH)
-      .set('Content-type', 'multipart/form-data')
-      .attach("file", resolve("test/fixtures/filesrocket.png"))
-      .set('Connection', 'keep-alive')
-      .expect(200)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) return done(err);
-        assert.equal(res.body.name, "filesrocket.png");
-        return done();
-      });
+describe("POST /files", () => {
+  describe("when creating a file is successful", () => {
+    it("Create file", (done) => {
+      supertest
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .set('Connection', 'keep-alive')
+        .attach("file", resolve("test/fixtures/filesrocket.png"))
+        .expect(200)
+        .expect("Content-Type", /json/)
+        .end((err, res) => {
+          if (err) return done(err);
+          assert.equal(res.body.name, "filesrocket.png");
+          return done();
+        });
+    });
   });
 
-  it("Get files", (done) => {
+  describe("when creating a file is failure", () => {
+    it("When no field is sent", (done) => {
+      // ...
+    });
+
+    it("When sending a field other than file", (done) => {
+      // ...
+    });
+
+    it("When the faithful field is sent empty", (done) => {
+      // ...
+    });
+
+    it("When the file extension is not allowed.", (done) => {
+      // ...
+    });
+  });
+});
+
+describe("GET /files", () => {
+  it("Get many files", (done) => {
     supertest
-      .get(PATH)
+      .get(path)
       .expect(200)
       .expect("Content-Type", /json/)
       .end((err, res) => {
@@ -79,25 +54,31 @@ describe("File controller.", () => {
         done();
       });
   });
+});
 
-  it("Remove file", (done) => {
-    supertest
-      .delete(PATH)
-      .query({ id: "1" })
-      .expect(200)
-      .expect("Content-Type", /json/)
-      .end((err, res) => {
-        if (err) return done(err);
-        assert.deepEqual(res.body, {
-          id: "1",
-          name: "filesrocket.png",
-          size: 12345
+describe("DELETE /files", () => {
+  describe("when deleting a file is successful", () => {
+    it("Remove file", (done) => {
+      supertest
+        .delete(path)
+        .query({ id: "1" })
+        .expect(200)
+        .expect("Content-Type", /json/)
+        .end((err, res) => {
+          if (err) return done(err);
+          assert.deepEqual(res.body, {
+            id: "1",
+            name: "filesrocket.png",
+            size: 12345
+          });
+          done();
         });
-        done();
-      });
+    });
   });
 
-  it("Remove file when email is not sent", (done) => {
-    supertest.delete(PATH).expect(400, done);
+  describe("when deleting a file is failure", () => {
+    it("Remove file when email is not sent", (done) => {
+      supertest.delete(path).expect(400, done);
+    });
   });
 });
