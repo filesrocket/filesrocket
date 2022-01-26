@@ -1,9 +1,15 @@
-import express, { Request, Response } from "express";
 import { createWriteStream } from "fs";
 import { resolve } from "path";
+import express from "express";
 
+import {
+  FileEntity,
+  ResultEntity,
+  ServiceMethods,
+  UploadOptions
+} from "../../src";
 import { FileController } from "../../src/controllers/file.controller";
-import { FileEntity, ResultEntity, ROCKET_RESULT, ServiceMethods, UploadOptions } from "../../src";
+import { handler } from "../utils/common";
 
 const _app = express();
 
@@ -36,11 +42,6 @@ class Service implements Partial<ServiceMethods> {
 
 const controller = new FileController(new Service());
 const PATH: string = "/files";
-
-const handler = (req: Request, res: Response) => {
-  const data = (req as any)[ROCKET_RESULT];
-  res.status(200).json(data);
-}
 
 const options: Partial<UploadOptions> = {
   allowedExts: [".png"]
