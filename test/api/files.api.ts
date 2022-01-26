@@ -3,7 +3,7 @@ import { createWriteStream } from "fs";
 import { resolve } from "path";
 
 import { FileController } from "../../src/controllers/file.controller";
-import { FileEntity, ResultEntity, ROCKET_RESULT, ServiceMethods } from "../../src";
+import { FileEntity, ResultEntity, ROCKET_RESULT, ServiceMethods, UploadOptions } from "../../src";
 
 const _app = express();
 
@@ -42,7 +42,11 @@ const handler = (req: Request, res: Response) => {
   res.status(200).json(data);
 }
 
-_app.post(PATH, controller.create(), handler);
+const options: Partial<UploadOptions> = {
+  allowedExts: [".png"]
+};
+
+_app.post(PATH, controller.create(options), handler);
 _app.get(PATH, controller.list(), handler);
 _app.delete(PATH, controller.remove(), handler);
 

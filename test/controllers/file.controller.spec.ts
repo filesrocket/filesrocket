@@ -1,9 +1,17 @@
 import request from "supertest";
 import { resolve } from "path";
 import assert from "assert";
+import { mkdir } from "fs";
 
 import { app, path, items } from "../api/files.api";
 const supertest = request(app);
+
+before(() => {
+  mkdir(resolve("uploads"), (err) => {
+    if (err) return console.error(err);
+    console.log("Create uploads directory");
+  });
+});
 
 describe("POST /files", () => {
   describe("when creating a file is successful", () => {
@@ -25,19 +33,27 @@ describe("POST /files", () => {
 
   describe("when creating a file is failure", () => {
     it("When no field is sent", (done) => {
-      // ...
+      request(app)
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .expect(500)
+        .expect(/Multipart: Boundary not found/, done);
     });
 
     it("When sending a field other than file", (done) => {
-      // ...
-    });
-
-    it("When the faithful field is sent empty", (done) => {
-      // ...
+      request(app)
+        .post(path)
+        .attach("image", resolve("test/fixtures/filesrocket.png"))
+        .expect(400)
+        .expect(/BadRequestError: The file field does not exist./, done)
     });
 
     it("When the file extension is not allowed.", (done) => {
-      // ...
+      request(app)
+        .post(path)
+        .attach("file", resolve("test/fixtures/readme.txt"))
+        .expect(400)
+        .expect(/BadRequestError: The .txt extension is not allowed./, done)
     });
   });
 });
@@ -77,8 +93,11 @@ describe("DELETE /files", () => {
   });
 
   describe("when deleting a file is failure", () => {
-    it("Remove file when email is not sent", (done) => {
-      supertest.delete(path).expect(400, done);
+    it("Remove file when id is not sent", (done) => {
+      supertest
+        .delete(path)
+        .expect(400)
+        .expect(/BadRequestError: The id property is required./, done);
     });
   });
 });
