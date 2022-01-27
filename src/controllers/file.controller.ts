@@ -18,7 +18,7 @@ export class FileController extends BaseController implements ControllerMethods 
   }
 
   create(query: Partial<UploadOptions> = {}): Middleware {
-    return (req: Request, _: Response, next: NextFunction) => {
+    return (req: Request, res: Response, next: NextFunction) => {
       try {
         const busboy = new Busboy({
           ...query,

@@ -1,7 +1,7 @@
 {
   "name": "filesrocket",
   "version": "0.1.0",
-  "description": "FilesRocket is a Nodejs package that takes care of the file management of any cloud service either AWS, Cloudinary, Google Cloud and others.",
+  "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service either Local, Clousinary, Amazon S3 and others.",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
@@ -22,10 +22,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "busboy": "^0.3.1",
-    "express": "^4.17.1",
-    "http-errors": "^1.7.2",
-    "uniqid": "^5.4.0"
+    "busboy": "0.3.1",
+    "express": "4.17.1",
+    "http-errors": "1.7.2",
+    "uniqid": "5.4.0"
   },
   "devDependencies": {
     "@types/busboy": "^0.2.4",

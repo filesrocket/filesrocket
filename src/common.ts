@@ -41,12 +41,12 @@ export interface GenerateFilenameParams<T> {
  * Generates a unique filename.
  * @param strategy Function that customizes the creation of the filename.
  */
- export function GenerateFilename<T>(
+ export function Filename<T>(
   params?: Partial<GenerateFilenameParams<T>>
 ) {
   return function (
-    _: Object,
-    __: string | symbol,
+    target: Object,
+    key: string | symbol,
     descriptor: PropertyDescriptor
   ) {
     let original = descriptor.value;

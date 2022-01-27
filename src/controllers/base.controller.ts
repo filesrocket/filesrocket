@@ -7,7 +7,7 @@ export class BaseController implements Omit<ControllerMethods, "create"> {
   constructor(protected readonly service: Service<any>) {}
 
   list(): Middleware {
-    return async (req: Request, _: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         if (typeof this.service.list !== "function") {
           return next(new NotImplemented("The list method not implemented."));
@@ -24,7 +24,7 @@ export class BaseController implements Omit<ControllerMethods, "create"> {
   }
 
   remove(): Middleware {
-    return async (req: Request, _: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         if (typeof this.service.remove !== "function") {
           return next(new NotImplemented("The remove method not implemented."));

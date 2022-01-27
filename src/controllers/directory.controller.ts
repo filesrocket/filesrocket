@@ -11,7 +11,7 @@ export class DirectoryController extends BaseController implements ControllerMet
   }
 
   create(): Middleware {
-    return async (req: Request, _: Response, next: NextFunction) => {
+    return async (req: Request, res: Response, next: NextFunction) => {
       try {
         if (typeof this.service.create !== "function") {
           return next(new NotImplemented("The create method not implemented."));

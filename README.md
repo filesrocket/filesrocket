@@ -1,7 +1,7 @@
 ![Filesrocket](https://user-images.githubusercontent.com/64434514/148323581-1afc535f-fb2b-4e81-808a-19afe5b4c7c9.png)
 # Manage your files and directories with any cloud services.
 
-**Filesrocket** is an package of **Node.js** that allows you to manage your files and directories with any cloud service (Local, Cloudinary, AWS S3) through the use of strategies called [services](#services). We have also created a package so you can elegantly manipulate it from the client-side [filesrocket-client](https://github.com/IvanZM123/filesrocket-client), this is compatible with any Framework **Angular**, **React**, **Vue** and others.
+Filesrocket is an package of Node.js that allows you to manage your files and directories with any cloud service (Local, Cloudinary, AWS S3) through the use of strategies called [services](#services). We have also created a package so you can elegantly manipulate it from the client-side [filesrocket-client](https://github.com/IvanZM123/filesrocket-client), this is compatible with any Framework Angular, React, Vue and others.
 
 > ⚠️ Filesrocket it is currently in **beta** phase. Note that it is not ready for production yet. Thanks for your understanding! ❤️
 
@@ -66,9 +66,8 @@ ts-node src/index.ts
 
 To be able to interact with the files and directories we access to the followings endpoints.
 
-- Files: http://localhost:3030/storage/local/files
-
-- Directories: http://localhost:3030/storage/local/directories
+Files: http://localhost:3030/storage/local/files
+Directories: http://localhost:3030/storage/local/directories
 
 With this simple example we are ready to interact with our entities.
 
@@ -80,6 +79,7 @@ We have also created many repositories with the most popular frameworks for you 
 | Vue | [filesrocket-vue-app](https://github.com/IvanZM123/filesrocket-vue-app) |
 | Angular | [filesrocket-angular-app](https://github.com/IvanZM123/filesrocket-angular-app) |
 | React | [filesrocket-react-app](https://github.com/IvanZM123/filesrocket-react-app)|
+| Svelte | [filesrocket-svelte-app](https://github.com/IvanZM123/filesrocket-svelte-app) |
 | Express | [filesrocket-express-app](https://github.com/IvanZM123/filesrocket-express-app) |
 
 ## File API.
@@ -95,7 +95,7 @@ For example, the endpoints will vary based on the service you are using, in the 
 | [filesrocket-cloudinary](https://github.com/IvanZM123/filesrocket-cloudinary)   | `http://<my-domain>://:path/cloudinary/files` | ✅ |
 | [filesrocket-s3](https://github.com/IvanZM123/filesrocket-s3)   | `http://<my-domain>://:path/s3/files` | ✅ |
 
-### Response structure
+#### Response structure.
 To save the consistence of each request, in **Filesrocket** we make sure that all the actions "CRUD" have a response template defined, so regardless of whether you want `create/upload`, `list` or `remove` you will always get this structure.
 
 ```js
@@ -138,11 +138,9 @@ The required and optional parameters for uploading files are listed below.
 ### Optionals parameters.
 | Params | Type | Description |
 | --------- | ---- | ----------- |
-| path      | String | Represents the path where you want to save the file. remember that folders are generated recursively (**Query**) |
+| path      | String | Represents the path where you want to save the file. remember that folders are generated recursively (Query) |
 
-> **Note**: To avoid filename conflicts, **Filesrocket** adds a hash before the extension name. For example: `filesrocket.png -> filesrocket-kshaw8a.png`
-
-> **Note**: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
+> Note: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
 
 ## Getting files.
 The required and optional parameters for getting files are listed below.
@@ -156,7 +154,7 @@ The required and optional parameters for getting files are listed below.
 | size | Number | Specify the number of files to be obtained (**Query**) |
 | page | String | This parameter specifies the page we want to access, it is useful when we want to paginate our results (**Query**) |
 
-> **Note**: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
+> Note: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
 
 ## Deleting files.
 The required and optional parameters for removing files are listed below.
@@ -168,7 +166,7 @@ The required and optional parameters for removing files are listed below.
 | --------- | ---- | ----------- |
 | id      | String | Represent the identifier file (**Query**) |
 
-> **Note**: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
+> Note: The parameters present in the table will be found in each of the services you use. In case you want to send special parameters, you need to visit the official documentation of the service you are using.
 
 So far we have seen how to perform "CRUD" operations without our specialized package [filesrocket-client](https://github.com/IvanZM123/filesrocket-client), we strongly recommend that you use it, as it will make your job. In addition to being compatible with any framework on the client side, be it Angular, React, Vue and others.
 
@@ -207,7 +205,7 @@ To save the consistence of each request, in **Filesrocket** we make sure that al
 }
 ```
 
-> **Note**: Keep in mind, that depending on the service you are going to use, other properties will be present, apart from those shown in the previous example, this means that there will be more properties than those shown in the base schema.
+> Note: Keep in mind, that depending on the service you are going to use, other properties will be present, apart from those shown in the previous example, this means that there will be more properties than those shown in the base schema.
 
 During the example we will be supporting the service [filesrocket-local](https://github.com/IvanZM123/filesrocket-local), therefore our URL will be as follows.
 
@@ -251,16 +249,24 @@ The required and optional parameters for removing directories are listed below.
 
 > Note: For security reasons, folders cannot be deleted until they are empty. We do this to avoid accidentally deleting a folder that contained many files.
 
+## Decorators.
+Below is a complete list of decorators that are currently available.
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `@Service()` | Class | This decorator allows us to define the **name** and **type** of entities (Files or Directories) that our services will handle. |
+| `@Filename()` | Method | This decorator adds a hash to a file name. |
+
 ## Services.
-A service is a predefined class that allows you to manage an entity either files or directories. This classes are composed by a decorator names `@Service` and interface named `ServiceMethods`
+A service is a predefined class that allows you to manage an entity either files or directories. This classes are composed by a decorator names `@Service` and interface named `ServiceMethods`.
 
 Currently there are 3 services, but this is only the tip of the iceberg, later we will incorporate many more with your help.
 
 | Service | Description |
 | ------- | ----------- |
 | [filesrocket-local](https://github.com/IvanZM123/filesrocket-local) | Manage your files and directories on your own server. |
-| [filesrocket-cloudinary](https://github.com/IvanZM123/filesrocket-cloudinary) | 	Manage your files and directories on your [Cloudinary](https://cloudinary.com/documentation/node_integration) |
-| [filesrocket-s3](https://github.com/IvanZM123/filesrocket-s3) | Manage your files and directories with [Amazon S3](https://aws.amazon.com/s3) |
+| [filesrocket-cloudinary](https://github.com/IvanZM123/filesrocket-cloudinary) | Administra tus archivos y directorios con [Cloudinary](https://cloudinary.com/documentation/node_integration) |
+| [filesrocket-s3](https://github.com/IvanZM123/filesrocket-s3) | Administra tus archivos con [Amazon S3](https://aws.amazon.com/s3) |
 
 ### Creating my first service.
 The official services may not meet your needs, but don't worry, Filesrocket is thinking for you to create your own services. So let's get to it. But before, it is necessary to take into account some considerations.
@@ -349,7 +355,7 @@ As you have just seen, a hook is nothing more than a simple function, which rece
 - `Response`: It is an object that represents the HTTP response. For more information click [here](https://expressjs.com/en/4x/api.html#res)
 - `NextFunction`: It is an function that represent the cycle `request-response`
 
-> **Note**: To facilitate the adoption of the tool, the hooks are based on express middleware functions, visit [here](https://expressjs.com/en/guide/using-middleware.html) for more information.
+> Note: To facilitate the adoption of the tool, the hooks are based on express middleware functions, visit [here](https://expressjs.com/en/guide/using-middleware.html) for more information.
 
 ### Creating my first hook.
 As we visualized in the previous example, creating a hook is quite simple, since it is nothing more than a Javascript function that is executed at a certain moment. But before creating a hook, it is necessary to take into account some considerations.
@@ -374,17 +380,17 @@ export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
     });
   }
 
-  next();
+  return next();
 }
 ```
 
-We create a hook in `src/hooks/sendEmail.ts` to send an email when a user uploads a file.
+We create a hook in `src/hooks/sendEMail.ts` to send an email when a user uploads a file.
 ```ts
 import { NextFunction, Request, Response } from "express";
 import { createTransport } from "nodemailer";
 import { ROCKET_RESULT } from "filesrocket";
 
-// Set config nodemailer.
+// Set config.
 const transport = createTransport({
   host: "smtp.mailtrap.io",
   port: 2525,
@@ -411,7 +417,7 @@ export async function sendEmail(
     .then(() => console.log("Sent email"))
     .catch(console.error);
 
-  next();
+    return next();
 }
 ```
 
@@ -451,6 +457,6 @@ const routes = RocketRouter.forRoot({
 app.use(routes);
 ```
 
-To recap, what we just did is create two hooks, the first one that is in charge of validating if a user sends an access token **before** `creating/uploading`, `listing` or `deleting` a file, and the second one sends an email **after** `creating/uploading` a file.
+To recap, what we just did is create two hooks, the first one that is in charge of validating if a user sends an access token **before** `creating/uploading`, listing or deleting a file, and the second one sends an email **after** `creating/uploading` a file.
 
 Perfect, with these examples you already know how hooks work, from now on you just have to give rein to your imagination.
