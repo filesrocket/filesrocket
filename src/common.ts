@@ -1,8 +1,8 @@
-import { generateRandomFilename } from "./utils";
-import { TypeEntities } from "./declarations";
+import { generateRandomFilename } from './utils'
+import { TypeEntities } from './declarations'
 
-import { DirectoryController } from "./controllers/directory.controller";
-import { FileController } from "./controllers/file.controller";
+import { DirectoryController } from './controllers/directory.controller'
+import { FileController } from './controllers/file.controller'
 
 export interface ServiceOptions {
   name: string;
@@ -14,19 +14,19 @@ export interface ServiceOptions {
  * based on their type (Files or Directories). In addition
  * to specifying the name of the service.
  *
- * **Note:** It is mandatory to decorate a class when you 
- * need to create a custom service. 
+ * **Note:** It is mandatory to decorate a class when you
+ * need to create a custom service.
  * @param options Options.
  */
-export function Service(options: ServiceOptions) {
+export function Service (options: ServiceOptions) {
   return (constructor: Function) => {
-    const { type, name } = options;
+    const { type, name } = options
 
-    const controller = type !== "Directories" ? FileController : DirectoryController;
+    const controller = type !== 'Directories' ? FileController : DirectoryController
 
-    constructor.prototype.entityType = type;
-    constructor.prototype.serviceName = name;
-    constructor.prototype.controller = controller;
+    constructor.prototype.entityType = type
+    constructor.prototype.serviceName = name
+    constructor.prototype.controller = controller
   }
 }
 
@@ -41,7 +41,7 @@ export interface GenerateFilenameParams<T> {
  * Generates a unique filename.
  * @param strategy Function that customizes the creation of the filename.
  */
- export function Filename<T>(
+export function Filename<T> (
   params?: Partial<GenerateFilenameParams<T>>
 ) {
   return function (
@@ -49,20 +49,20 @@ export interface GenerateFilenameParams<T> {
     key: string | symbol,
     descriptor: PropertyDescriptor
   ) {
-    let original = descriptor.value;
+    const original = descriptor.value
 
     descriptor.value = function (...args: any[]) {
-      const { property, strategy } = params || {};
-      const data = args[0];
+      const { property, strategy } = params || {}
+      const data = args[0]
 
-      const filename: string = generateRandomFilename(data[property || "name"]);
-      data[property || "name"] = filename;
+      const filename: string = generateRandomFilename(data[property || 'name'])
+      data[property || 'name'] = filename
 
-      if (typeof strategy === "function") {
-        data[property || "name"] = strategy(filename);
+      if (typeof strategy === 'function') {
+        data[property || 'name'] = strategy(filename)
       }
 
-      return original.apply(this, args);
-    };
-  };
+      return original.apply(this, args)
+    }
+  }
 }

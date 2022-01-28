@@ -1,48 +1,48 @@
-import assert from "assert";
+import assert from 'assert'
 
-import { ServiceMethods } from "../src/index";
-import { RocketRouter } from "../src/index";
-import { Service } from "../src/common";
+import { ServiceMethods, RocketRouter } from '../src/index'
+
+import { Service } from '../src/common'
 
 @Service({
-  type: "Files",
-  name: "filesrocket"
+  type: 'Files',
+  name: 'filesrocket'
 })
 export class FileService implements Partial<ServiceMethods> {}
 
-describe("Router", () => {
-  it("Instantiate the router", () => {
+describe('Router', () => {
+  it('Instantiate the router', () => {
     const routes = RocketRouter.forRoot({
-      path: "storage",
+      path: 'storage',
       services: []
-    });
+    })
 
-    assert.equal(typeof routes, "function");
-  });
+    assert.equal(typeof routes, 'function')
+  })
 
-  it("The number of routes is greater than zero", () => {
+  it('The number of routes is greater than zero', () => {
     const routes = RocketRouter.forRoot({
-      path: "storage",
+      path: 'storage',
       services: [
         { service: new FileService() }
       ]
-    });
+    })
 
-    assert.equal(typeof routes, "function");
-    assert.ok(routes.stack.length > 0);
-  });
+    assert.equal(typeof routes, 'function')
+    assert.ok(routes.stack.length > 0)
+  })
 
-  it("Validate the format of the url", () => {
+  it('Validate the format of the url', () => {
     const routes = RocketRouter.forRoot({
-      path: "storage",
+      path: 'storage',
       services: [
         { service: new FileService() }
       ]
-    });
+    })
 
-    const stack = routes.stack[0];
-    const route = stack.route;
+    const stack = routes.stack[0]
+    const route = stack.route
 
-    assert.equal(route.path, "/storage/filesrocket/files");
-  });
-});
+    assert.equal(route.path, '/storage/filesrocket/files')
+  })
+})

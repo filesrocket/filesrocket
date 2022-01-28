@@ -1,3 +1,4 @@
+import _createHttpError from 'http-errors'
 export {
   BadRequest,
   Unauthorized,
@@ -40,6 +41,5 @@ export {
   HTTPVersionNotSupported,
   LoopDetected,
   BandwidthLimitExceeded
-} from "http-errors";
-import _createHttpError from "http-errors";
-export const createHttpError = _createHttpError;
+} from 'http-errors'
+export const createHttpError = _createHttpError

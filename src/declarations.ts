@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from "express";
-import { ObjectHooks } from "./hooks";
+import { NextFunction, Request, Response } from 'express'
+import { ObjectHooks } from './hooks'
 
 export interface Query {
   [key: string]: any;
 }
 
-export const ROCKET_RESULT = "rocketResult";
+export const ROCKET_RESULT = 'rocketResult'
 
-export type TypeEntities = "Files" | "Directories";
+export type TypeEntities = 'Files' | 'Directories';
 
 export type Middleware = (
   req: Request,
@@ -63,6 +63,7 @@ export interface FileEntity {
    * Represent a Readable of Node.js. For more information visit:
    * https://nodejs.org/api/stream.html#readable-streams
    */
+  // eslint-disable-next-line no-undef
   stream: NodeJS.ReadableStream;
   fieldname: string;
   encoding: string;
@@ -164,7 +165,7 @@ export interface UploadOptions {
 
 export interface ServiceRouter {
   /**
-   * Service name, this name replaces the original name 
+   * Service name, this name replaces the original name
    * of the service you are using.
   */
   name?: string;
@@ -186,11 +187,11 @@ export interface ServiceRouter {
 }
 
 export interface RouterParams {
-  /** 
+  /**
    * Root path.
    * */
   path: string;
-  /** 
+  /**
    * List of services.
    * */
   services: ServiceRouter[];
