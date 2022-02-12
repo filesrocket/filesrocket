@@ -5,6 +5,9 @@ import { ControllerMethods, Middleware, Service, DirectoryEntity } from '../decl
 import { BaseController } from './base.controller'
 import { ROCKET_RESULT } from '../index'
 
+/**
+ * Controller methods will need to be modified.
+ */
 export class DirectoryController extends BaseController implements ControllerMethods {
   constructor (protected readonly service: Service<DirectoryEntity>) {
     super(service)

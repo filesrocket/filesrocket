@@ -12,6 +12,9 @@ import {
 import { BaseController } from './base.controller'
 import { BadRequest, NotImplemented } from '../errors'
 
+/**
+ * Controller methods will need to be modified.
+ */
 export class FileController extends BaseController implements ControllerMethods {
   constructor (protected readonly service: Service<FileEntity>) {
     super(service)
