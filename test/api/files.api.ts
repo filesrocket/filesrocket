@@ -5,8 +5,7 @@ import express from 'express'
 import {
   FileEntity,
   ResultEntity,
-  ServiceMethods,
-  UploadOptions
+  ServiceMethods
 } from '../../src'
 import { FileController } from '../../src/controllers/file.controller'
 import { handler } from '../utils/common'
@@ -40,16 +39,14 @@ class Service implements Partial<ServiceMethods> {
   }
 }
 
-const controller = new FileController(new Service())
+const controller = new FileController(new Service(), {
+  allowedExts: ['.png']
+} as any)
 const PATH: string = '/files'
 
-const options: Partial<UploadOptions> = {
-  allowedExts: ['.png']
-}
-
-_app.post(PATH, controller.create(options), handler)
-_app.get(PATH, controller.list(), handler)
-_app.delete(PATH, controller.remove(), handler)
+_app.post(PATH, controller.create.bind(controller), handler)
+_app.get(PATH, controller.list.bind(controller), handler)
+_app.delete(PATH, controller.remove.bind(controller), handler)
 
 export const app = _app
 export const path = PATH

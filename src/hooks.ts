@@ -36,12 +36,12 @@ export interface Handler {
 }
 
 export function serviceHandler (options: Handler): Middleware[] {
-  const { hooks = {}, controller, query } = options
+  const { hooks = {}, controller } = options
   const { before = [], after = [] } = hooks
 
   return [
     ...before,
-    controller[options.method](query),
+    controller[options.method].bind(controller),
     formatter(after.length),
     ...after,
     formatter(0)

@@ -42,8 +42,8 @@ class Service implements Partial<ServiceMethods<DirectoryEntity>> {
 
 const controller = new DirectoryController(new Service())
 
-_app.post(path, controller.create(), handler)
-_app.get(path, controller.list(), handler)
-_app.delete(path, controller.remove(), handler)
+_app.post(path, controller.create.bind(controller), handler)
+_app.get(path, controller.list.bind(controller), handler)
+_app.delete(path, controller.remove.bind(controller), handler)
 
 export const app = _app

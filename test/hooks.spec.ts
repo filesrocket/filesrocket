@@ -1,5 +1,5 @@
+import express, { Request, Response, NextFunction } from 'express'
 import request from 'supertest'
-import express from 'express'
 import assert from 'assert'
 
 import { ControllerMethods, Middleware, ResultEntity, ROCKET_RESULT } from '../src'
@@ -30,31 +30,25 @@ const items: Partial<ResultEntity>[] = [
 ]
 
 class Controller implements ControllerMethods {
-  create (): Middleware {
-    return (req, _, next) => {
-      req = Object.defineProperty(req, ROCKET_RESULT, { value: items[0] })
-      return next()
-    }
+  async create (req: Request, res: Response, next: NextFunction) {
+    req = Object.defineProperty(req, ROCKET_RESULT, { value: items[0] })
+    return next()
   }
 
-  list (): Middleware {
-    return (req, _, next) => {
-      req = Object.defineProperty(req, ROCKET_RESULT, { value: items.slice() })
-      next()
-    }
+  list (req: Request, res: Response, next: NextFunction) {
+    req = Object.defineProperty(req, ROCKET_RESULT, { value: items.slice() })
+    next()
   }
 
-  remove (): Middleware {
-    return (req, _, next) => {
-      const { id } = req.query
+  remove (req: Request, res: Response, next: NextFunction) {
+    const { id } = req.query
 
-      const index = items.findIndex(item => item.id === id)
-      const entity = items[index]
-      items.splice(index, 1)
+    const index = items.findIndex(item => item.id === id)
+    const entity = items[index]
+    items.splice(index, 1)
 
-      req = Object.defineProperty(req, ROCKET_RESULT, { value: entity })
-      next()
-    }
+    req = Object.defineProperty(req, ROCKET_RESULT, { value: entity })
+    next()
   }
 }
 
