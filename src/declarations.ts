@@ -133,15 +133,15 @@ export interface ControllerMethods {
   /**
    * Middleware reponsible of the creation of an entity.
    */
-  create: Middleware;
+  create(query?: Query): Middleware;
   /**
    * Middleware reponsible of the list of entities.
    */
-  list: Middleware;
+  list(query?: Query): Middleware;
   /**
    * Middleware reponsible of the deletion of entities.
    */
-  remove: Middleware;
+  remove(query?: Query): Middleware;
 }
 
 export type Service<T = FileEntity> = Partial<ServiceMethods<T, Partial<ResultEntity>>>;

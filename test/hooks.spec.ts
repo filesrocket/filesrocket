@@ -30,25 +30,31 @@ const items: Partial<ResultEntity>[] = [
 ]
 
 class Controller implements ControllerMethods {
-  async create (req: Request, res: Response, next: NextFunction) {
-    req = Object.defineProperty(req, ROCKET_RESULT, { value: items[0] })
-    return next()
+  create () {
+    return (req: Request, res: Response, next: NextFunction) => {
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: items[0] })
+      return next()
+    }
   }
 
-  list (req: Request, res: Response, next: NextFunction) {
-    req = Object.defineProperty(req, ROCKET_RESULT, { value: items.slice() })
-    next()
+  list () {
+    return (req: Request, res: Response, next: NextFunction) => {
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: items.slice() })
+      next()
+    }
   }
 
-  remove (req: Request, res: Response, next: NextFunction) {
-    const { id } = req.query
+  remove () {
+    return (req: Request, res: Response, next: NextFunction) => {
+      const { id } = req.query
 
-    const index = items.findIndex(item => item.id === id)
-    const entity = items[index]
-    items.splice(index, 1)
+      const index = items.findIndex(item => item.id === id)
+      const entity = items[index]
+      items.splice(index, 1)
 
-    req = Object.defineProperty(req, ROCKET_RESULT, { value: entity })
-    next()
+      req = Object.defineProperty(req, ROCKET_RESULT, { value: entity })
+      next()
+    }
   }
 }
 

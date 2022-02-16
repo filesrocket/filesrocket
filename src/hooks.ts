@@ -41,7 +41,7 @@ export function serviceHandler (options: Handler): Middleware[] {
 
   return [
     ...before,
-    controller[options.method].bind(controller),
+    controller[options.method](options.query),
     formatter(after.length),
     ...after,
     formatter(0)

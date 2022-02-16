@@ -21,7 +21,7 @@ export const items: Partial<ResultEntity>[] = [
 class Service implements Partial<ServiceMethods> {
   async create (data: FileEntity): Promise<Partial<ResultEntity>> {
     const writable = createWriteStream(resolve(`uploads/${data.name}`))
-    data.stream.pipe(writable)
+    data.stream.pipe(writable as any)
     return { name: data.name }
   }
 
@@ -39,14 +39,12 @@ class Service implements Partial<ServiceMethods> {
   }
 }
 
-const controller = new FileController(new Service(), {
-  allowedExts: ['.png']
-} as any)
+const controller = new FileController(new Service())
 const PATH: string = '/files'
 
-_app.post(PATH, controller.create.bind(controller), handler)
-_app.get(PATH, controller.list.bind(controller), handler)
-_app.delete(PATH, controller.remove.bind(controller), handler)
+_app.post(PATH, controller.create({ allowedExts: ['.png'] } as any), handler)
+_app.get(PATH, controller.list(), handler)
+_app.delete(PATH, controller.remove(), handler)
 
 export const app = _app
 export const path = PATH
