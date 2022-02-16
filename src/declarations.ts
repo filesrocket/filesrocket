@@ -160,7 +160,7 @@ export interface UploadOptions {
     parts?: number | undefined;
     headerPairs?: number | undefined;
   } | undefined;
-  allowedExts: string[];
+  extnames: string[];
 }
 
 export interface ServiceRouter {

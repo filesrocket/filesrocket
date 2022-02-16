@@ -7,7 +7,8 @@ import { parse } from 'path'
  */
 export function generateRandomFilename (filename: string): string {
   const { name, ext } = parse(filename)
-  return uniqid(`${name}-`) + ext
+  const uniquename = `${name.split(' ').join('-')}-${uniqid()}`
+  return `${uniquename}${ext}`
 }
 
 export type FunctionPredicate<T, K> = (

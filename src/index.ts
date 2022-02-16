@@ -1,4 +1,5 @@
 export { DirectoryController } from './controllers/directory.controller'
 export { FileController } from './controllers/file.controller'
 export { RocketRouter } from './router'
+export { Filesrocket } from './service'
 export * from './declarations'

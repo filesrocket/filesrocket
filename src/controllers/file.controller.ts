@@ -34,7 +34,7 @@ export class FileController extends BaseController implements ControllerMethods 
         })
 
         busboy.on('file', async (fieldname, stream, name, encoding, mimetype) => {
-          const exts: string[] = options?.allowedExts || []
+          const exts: string[] = options?.extnames || []
           const payload: FileEntity = {
             fieldname,
             stream,

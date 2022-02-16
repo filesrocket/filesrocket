@@ -42,7 +42,7 @@ class Service implements Partial<ServiceMethods> {
 const controller = new FileController(new Service())
 const PATH: string = '/files'
 
-_app.post(PATH, controller.create({ allowedExts: ['.png'] } as any), handler)
+_app.post(PATH, controller.create({ extnames: ['.png'] } as any), handler)
 _app.get(PATH, controller.list(), handler)
 _app.delete(PATH, controller.remove(), handler)
 
