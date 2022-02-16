@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import { parse } from 'path'
 import Busboy from 'busboy'
 
 import {
@@ -63,7 +64,7 @@ export class FileController extends BaseController
               return next()
             }
 
-            const [ext]: string[] = name.match(/\.([0-9a-z]+)(?:[?#]|$)/g) || []
+            const { ext } = parse(name)
 
             if (!exts.includes(ext)) {
               const extensions = exts.join(', ')
