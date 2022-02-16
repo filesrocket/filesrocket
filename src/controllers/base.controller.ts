@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { ControllerMethods, Middleware, ROCKET_RESULT, Service } from '../index'
+import {
+  ControllerMethods,
+  Middleware,
+  ROCKET_RESULT,
+  Service
+} from '../index'
 import { BadRequest, NotImplemented } from '../errors'
 
 export class BaseController implements Omit<ControllerMethods, 'create'> {
@@ -16,6 +21,7 @@ export class BaseController implements Omit<ControllerMethods, 'create'> {
         const data = await this.service.list(req.query)
 
         req = Object.defineProperty(req, ROCKET_RESULT, { value: data })
+
         next()
       } catch (error) {
         next(error)
@@ -35,7 +41,9 @@ export class BaseController implements Omit<ControllerMethods, 'create'> {
         }
 
         const data = await this.service.remove(String(req.query.id), req.query)
+
         req = Object.defineProperty(req, ROCKET_RESULT, { value: data })
+
         next()
       } catch (error) {
         next(error)

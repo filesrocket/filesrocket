@@ -2,12 +2,8 @@ import { createWriteStream } from 'fs'
 import { resolve } from 'path'
 import express from 'express'
 
-import {
-  FileEntity,
-  ResultEntity,
-  ServiceMethods
-} from '../../src'
 import { FileController } from '../../src/controllers/file.controller'
+import { FileEntity, ResultEntity, ServiceMethods } from '../../src'
 import { handler } from '../utils/common'
 
 const _app = express()

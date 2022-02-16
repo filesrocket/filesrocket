@@ -1,11 +1,7 @@
 import express from 'express'
 
-import {
-  DirectoryController,
-  DirectoryEntity,
-  ResultEntity,
-  ServiceMethods
-} from '../../src'
+import { DirectoryController } from '../../src/controllers/directory.controller'
+import { DirectoryEntity, ResultEntity, ServiceMethods } from '../../src'
 import { handler } from '../utils/common'
 
 const _app = express()

@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express'
-import { ObjectHooks } from './hooks'
 
 export interface Query {
   [key: string]: any;
@@ -161,38 +160,4 @@ export interface UploadOptions {
     headerPairs?: number | undefined;
   } | undefined;
   extnames: string[];
-}
-
-export interface ServiceRouter {
-  /**
-   * Service name, this name replaces the original name
-   * of the service you are using.
-  */
-  name?: string;
-  /**
-   * Hooks are middlewares that are executed before or
-   * after creating, listing or removing an entity.
-   */
-  hooks?: Partial<ObjectHooks>;
-  /**
-   * A service is a class, or an object that allows the
-   * administration of entities.
-   */
-  service: Partial<ServiceMethods<any, any>>;
-    /**
-   * Options. For more informarion visit the following
-   * link: https://www.npmjs.com/package/busboy#busboy-methods
-   */
-  options?: Partial<UploadOptions>;
-}
-
-export interface RouterParams {
-  /**
-   * Root path.
-   * */
-  path: string;
-  /**
-   * List of services.
-   * */
-  services: ServiceRouter[];
 }

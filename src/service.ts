@@ -1,10 +1,8 @@
 import EventEmitter from 'events'
-import {
-  ControllerMethods,
-  DirectoryController,
-  FileController,
-  ServiceMethods
-} from './index'
+
+import { DirectoryController } from './controllers/directory.controller'
+import { FileController } from './controllers/file.controller'
+import { ControllerMethods, ServiceMethods } from './index'
 
 export interface Entity {
   name: string;
