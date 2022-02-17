@@ -1,15 +1,13 @@
 import { Request, Response, NextFunction } from 'express'
 
-import {
-  ControllerMethods,
-  Middleware,
-  ROCKET_RESULT,
-  Service
-} from '../index'
+import { ControllerMethods, ROCKET_RESULT, Middleware } from '../index'
 import { BadRequest, NotImplemented } from '../errors'
+import { ServiceMethods } from '../declarations'
+
+type Service = Partial<ServiceMethods<any>>
 
 export class BaseController implements Omit<ControllerMethods, 'create'> {
-  constructor (protected readonly service: Service<any>) {}
+  constructor (protected readonly service: Service) {}
 
   list (): Middleware {
     return async (req: Request, res: Response, next: NextFunction) => {

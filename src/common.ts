@@ -6,7 +6,6 @@ import { DirectoryController } from './controllers/directory.controller'
 import { FileController } from './controllers/file.controller'
 
 export interface ServiceOptions {
-  name: string;
   type: TypeEntities;
 }
 
@@ -36,7 +35,7 @@ function ApplyMixins<T extends Constructor> (target: T, ...constructors: any[]) 
  */
 export function Service (options: ServiceOptions) {
   return (Constructor: any) => {
-    const { type, name } = options
+    const { type } = options
     const controller = type !== 'Directories'
       ? FileController
       : DirectoryController
@@ -44,7 +43,6 @@ export function Service (options: ServiceOptions) {
     const Service = ApplyMixins(
       class extends Constructor {
         entityType = type
-        serviceName = name
         controller = controller
       },
       EventEmitter

@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+import EventEmitter from 'events'
 
 export interface Query {
   [key: string]: any;
@@ -108,6 +109,23 @@ export interface ResultEntity extends Query {
   updatedAt: Date;
 }
 
+export interface UploadOptions {
+  highWaterMark: number | undefined;
+  fileHwm: number | undefined;
+  defCharset: string | undefined;
+  preservePath: boolean | undefined;
+  limits: {
+    fieldNameSize?: number | undefined;
+    fieldSize?: number | undefined;
+    fields?: number | undefined;
+    fileSize?: number | undefined;
+    files?: number | undefined;
+    parts?: number | undefined;
+    headerPairs?: number | undefined;
+  } | undefined;
+  extnames: string[];
+}
+
 export interface ServiceMethods<T = Partial<FileEntity>, K = Partial<ResultEntity>> {
   /**
    * Create a new entity.
@@ -143,21 +161,10 @@ export interface ControllerMethods {
   remove(query?: Query): Middleware;
 }
 
-export type Service<T = FileEntity> = Partial<ServiceMethods<T, Partial<ResultEntity>>>;
+export interface Service<T> extends ServiceMethods<T>, EventEmitter {}
 
-export interface UploadOptions {
-  highWaterMark: number | undefined;
-  fileHwm: number | undefined;
-  defCharset: string | undefined;
-  preservePath: boolean | undefined;
-  limits: {
-    fieldNameSize?: number | undefined;
-    fieldSize?: number | undefined;
-    fields?: number | undefined;
-    fileSize?: number | undefined;
-    files?: number | undefined;
-    parts?: number | undefined;
-    headerPairs?: number | undefined;
-  } | undefined;
-  extnames: string[];
+export interface Rocket {
+  name: string;
+  controller: ControllerMethods;
+  service: ServiceMethods;
 }

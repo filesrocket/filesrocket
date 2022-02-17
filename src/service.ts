@@ -1,19 +1,9 @@
-import EventEmitter from 'events'
-
+import { ControllerMethods, ServiceMethods, Rocket, Service } from './index'
 import { DirectoryController } from './controllers/directory.controller'
 import { FileController } from './controllers/file.controller'
-import { ControllerMethods, ServiceMethods } from './index'
-
-export interface Entity {
-  name: string;
-  controller: ControllerMethods;
-  service: ServiceMethods;
-}
-
-export interface Service<T> extends ServiceMethods<T>, EventEmitter {}
 
 export class Filesrocket {
-  private entities: Map<string, Entity> = new Map();
+  private entities: Map<string, Rocket> = new Map();
 
   /**
    * Method responsible for registering services
@@ -55,5 +45,9 @@ export class Filesrocket {
     const data = this.entities.get(name)
     if (!data) throw new Error('Controller is not registered')
     return data.controller
+  }
+
+  get services (): Rocket[] {
+    return [...this.entities].map((entity) => entity[1])
   }
 }

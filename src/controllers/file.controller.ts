@@ -4,18 +4,17 @@ import Busboy from 'busboy'
 
 import {
   ControllerMethods,
-  Service,
   FileEntity,
   ROCKET_RESULT,
-  UploadOptions
+  UploadOptions,
+  ServiceMethods
 } from '../declarations'
 import { BadRequest, NotImplemented } from '../errors'
 import { BaseController } from './base.controller'
 import { Middleware } from '../index'
 
-export class FileController extends BaseController
-  implements ControllerMethods {
-  constructor (protected readonly service: Service<FileEntity>) {
+export class FileController extends BaseController implements ControllerMethods {
+  constructor (protected readonly service: Partial<ServiceMethods>) {
     super(service)
   }
 

@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from 'express'
 import { BadRequest, NotImplemented } from 'http-errors'
 
-import { ControllerMethods, Service, DirectoryEntity } from '../declarations'
+import { ControllerMethods, DirectoryEntity, ServiceMethods } from '../declarations'
 import { Middleware, ROCKET_RESULT } from '../index'
 import { BaseController } from './base.controller'
 
-export class DirectoryController extends BaseController
-  implements ControllerMethods {
-  constructor (protected readonly service: Service<DirectoryEntity>) {
+type Service = Partial<ServiceMethods<DirectoryEntity>>
+
+export class DirectoryController extends BaseController implements ControllerMethods {
+  constructor (protected readonly service: Service) {
     super(service)
   }
 
