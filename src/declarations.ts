@@ -126,7 +126,7 @@ export interface UploadOptions {
   extnames: string[];
 }
 
-export interface ServiceMethods<T = Partial<FileEntity>, K = Partial<ResultEntity>> {
+export interface ServiceMethods<T = Partial<FileEntity>, K = ResultEntity> {
   /**
    * Create a new entity.
    * @param data Data.
@@ -144,6 +144,14 @@ export interface ServiceMethods<T = Partial<FileEntity>, K = Partial<ResultEntit
    * @param query Query.
    */
   remove(id: string, query?: Query): Promise<K>;
+}
+
+export interface FileManager {
+  file: ServiceMethods;
+}
+
+export interface DirectoryManager {
+  directory: ServiceMethods<DirectoryEntity>;
 }
 
 export interface ControllerMethods {
