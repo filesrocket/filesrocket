@@ -15,23 +15,23 @@ export const items: Partial<ResultEntity>[] = [
 ]
 
 class Service implements Partial<ServiceMethods> {
-  async create (data: FileEntity): Promise<Partial<ResultEntity>> {
+  async create (data: FileEntity): Promise<ResultEntity> {
     const writable = createWriteStream(resolve(`uploads/${data.name}`))
     data.stream.pipe(writable as any)
-    return { name: data.name }
+    return { name: data.name } as ResultEntity
   }
 
-  async list (): Promise<Partial<ResultEntity>[]> {
-    return items
+  async list (): Promise<ResultEntity[]> {
+    return items as ResultEntity[]
   }
 
-  async remove (id: string): Promise<Partial<ResultEntity>> {
+  async remove (id: string): Promise<ResultEntity> {
     const index: number = items.findIndex(item => item.id === id)
 
     const data = items[index]
     items.splice(index, 1)
 
-    return data
+    return data as ResultEntity
   }
 }
 

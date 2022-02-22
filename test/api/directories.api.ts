@@ -23,16 +23,16 @@ class Service implements Partial<ServiceMethods<DirectoryEntity>> {
   }
 
   async list () {
-    return items
+    return items as ResultEntity[]
   }
 
-  async remove (id: string): Promise<Partial<ResultEntity>> {
+  async remove (id: string): Promise<ResultEntity> {
     const index = items.findIndex(item => item.id === id)
 
     const data = items[index]
     items.splice(index, 1)
 
-    return data
+    return data as ResultEntity
   }
 }
 
