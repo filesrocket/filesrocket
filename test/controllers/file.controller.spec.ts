@@ -1,4 +1,5 @@
 import supertest from 'supertest'
+import { resolve } from 'path'
 import express from 'express'
 import assert from 'assert'
 
@@ -24,7 +25,7 @@ const path: string = '/files'
 
 const app = express()
 
-app.post(path, controller.create(), handler)
+app.post(path, controller.create({ extnames: ['.png'] }), handler)
 
 app.get(path, controller.list(), handler)
 
@@ -40,15 +41,46 @@ before(async () => {
 
 describe('POST /files', () => {
   describe('when creating a file is successful', () => {
-    it('Create file', () => {})
+    it('Create file', (done) => {
+      request
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .set('Connection', 'keep-alive')
+        .attach('file', resolve('test/fixtures/filesrocket.png'))
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+          assert.ok(res.body.name === 'filesrocket.png')
+          done()
+        })
+    })
   })
 
   describe('when creating a file is failure', () => {
-    it('When no field is sent', () => {})
+    it('When no field is sent', (done) => {
+      request
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .expect(500)
+        .expect(/Multipart: Boundary not found/, done)
+    })
 
-    it('When sending a field other than file', () => {})
+    it('When sending a field other than file', (done) => {
+      request
+        .post(path)
+        .attach('image', resolve('test/fixtures/filesrocket.png'))
+        .expect(400)
+        .expect(/BadRequestError: The file field does not exist./, done)
+    })
 
-    it('When the file extension is not allowed.', () => {})
+    it('When the file extension is not allowed.', (done) => {
+      request
+        .post(path)
+        .attach('file', resolve('test/fixtures/filesrocket.md'))
+        .expect(400)
+        .expect(/BadRequestError: The .md extension is not allowed./, done)
+    })
   })
 })
 
@@ -60,7 +92,7 @@ describe('GET /files', () => {
       .expect('Content-Type', /json/)
       .end((err, res) => {
         if (err) return done(err)
-        assert.equal(res.body.length, items.length)
+        assert.ok(res.body.length > 1)
         done()
       })
   })
