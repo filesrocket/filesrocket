@@ -100,10 +100,26 @@ describe('GET /files', () => {
 
 describe('DELETE /files', () => {
   describe('when deleting a file is successful', () => {
-    it('Remove file', () => {})
+    it('Remove file', (done) => {
+      const url = `${path}?id=image-one.jpg`
+      request
+        .delete(url)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+          assert.ok(typeof res === 'object')
+          done()
+        })
+    })
   })
 
   describe('when deleting a file is failure', () => {
-    it('Remove file when id is not sent', () => {})
+    it('Remove file when id is not sent', (done) => {
+      request
+        .delete(path)
+        .expect(400)
+        .expect(/BadRequestError: The id property is required./, done)
+    })
   })
 })
