@@ -108,7 +108,7 @@ describe('DELETE /files', () => {
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) return done(err)
-          assert.ok(typeof res === 'object')
+          assert.ok(typeof res.body === 'object')
           done()
         })
     })

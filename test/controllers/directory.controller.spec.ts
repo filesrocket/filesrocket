@@ -1,86 +1,132 @@
-// import request from 'supertest'
-// import assert from 'assert'
-
+import supertest from 'supertest'
+import express from 'express'
 import assert from 'assert'
 
-// import { app, path, items } from '../api/directories.api'
+import { DirectoryEntity, Filesrocket } from '../../src/index'
+import { DirectoryService } from '../helpers/service'
+import { handler } from '../helpers/common'
 
-// describe('POST /directories', () => {
-//   describe('when creating a directory is successful', () => {
-//     it('Create new directory', (done) => {
-//       request(app)
-//         .post(path)
-//         .set('Accept', 'application/json')
-//         .send({ name: 'images' })
-//         .expect('Content-Type', /json/)
-//         .expect(200)
-//         .end((err, res) => {
-//           if (err) return done(err)
+const items: Partial<DirectoryEntity>[] = [
+  { name: 'images' },
+  { name: 'videos' },
+  { name: 'audios' },
+  { name: 'documents' }
+]
 
-//           assert.equal(typeof res.body, 'object')
-//           assert.deepEqual(res.body, { name: 'images' })
+const path = '/directories'
 
-//           done()
-//         })
-//     })
-//   })
+const filesrocket = new Filesrocket()
 
-//   describe('when creating a directory fails', () => {
-//     it('When the name property is not sent', (done) => {
-//       request(app)
-//         .post(path)
-//         .set('Accept', 'application/json')
-//         .send({})
-//         .expect(400)
-//         .expect(/The body of the request is empty./, done)
-//     })
-//   })
-// })
+filesrocket.register('local', new DirectoryService())
 
-// describe('GET /directories', () => {
-//   describe('when getting directories is successful', () => {
-//     it('Get all directories', (done) => {
-//       request(app)
-//         .get(path)
-//         .expect(200)
-//         .end((err, res) => {
-//           if (err) return done(err)
-//           assert.equal(res.body.length, items.length)
-//           done()
-//         })
-//     })
-//   })
-// })
+const service = filesrocket.service('local')
 
-// describe('DELETE /directories', () => {
-//   describe('when the directory removal is successful', () => {
-//     it('Remove directory successfully', (done) => {
-//       request(app)
-//         .delete(path)
-//         .query({ id: '123' })
-//         .expect(200)
-//         .end((err, res) => {
-//           if (err) return done()
+const controller = filesrocket.controller('local')
 
-//           assert.equal(typeof res.body, 'object')
-//           assert.equal(res.body.id, '123')
+// Initialize app.
+const app = express()
 
-//           done()
-//         })
-//     })
-//   })
+app.use(express.json())
+app.use(express.urlencoded({ extended: false }))
 
-//   describe('when directory removal fails', () => {
-//     it('When the directory id is not sent', (done) => {
-//       request(app)
-//         .delete(path)
-//         .query({})
-//         .expect(400)
-//         .expect(/The id property is required./, done)
-//     })
-//   })
-// })
+// Defining routes.
+app.post(path, controller.create(), handler)
 
-it('2 + 2', () => {
-  assert.ok(2 + 2 === 4)
+app.get(path, controller.list(), handler)
+
+app.delete(path, controller.remove(), handler)
+
+const request = supertest(app)
+
+before(async () => {
+  for (const item of items) {
+    await service.create(item)
+  }
+})
+
+describe('GET /directories', () => {
+  describe('when creating a directory is successful', () => {
+    it('Get all directories', (done) => {
+      request
+        .get(path)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+          assert.equal(res.body.length, items.length)
+          done()
+        })
+    })
+  })
+})
+
+describe('POST /directories', () => {
+  describe('when creating a directory is successful', () => {
+    it('create new directory', (done) => {
+      request
+        .post(path)
+        .set('Accept', 'application/json')
+        .send({ name: 'icons' })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+
+          assert.equal(typeof res.body, 'object')
+          assert.deepEqual(res.body, { name: 'icons' })
+
+          done()
+        })
+    })
+  })
+
+  describe('when creating a directory fails', () => {
+    it('When the name property is not sent', (done) => {
+      request
+        .post(path)
+        .set('Accept', 'application/json')
+        .send({})
+        .expect(400)
+        .expect(/The body of the request is empty./, done)
+    })
+  })
+})
+
+describe('DELETE /directories', () => {
+  describe('when the directory removal is successful', () => {
+    it('Remove directory successfully', (done) => {
+      request
+        .delete(path)
+        .query({ id: 'videos' })
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done()
+
+          assert.equal(typeof res.body, 'object')
+          assert.deepEqual(res.body, { name: 'videos' })
+
+          done()
+        })
+    })
+  })
+
+  describe('when directory removal fails', () => {
+    it('When the directory id is not sent', (done) => {
+      request
+        .delete(path)
+        .query({})
+        .expect(400)
+        .expect(/The id property is required./, done)
+    })
+
+    it('When you deleted a directory that does not exist', (done) => {
+      const url = `${path}?id=random`
+
+      request
+        .delete(url)
+        .expect(404)
+        .expect(/NotFoundError: Entity does not exist./, done)
+    })
+  })
 })

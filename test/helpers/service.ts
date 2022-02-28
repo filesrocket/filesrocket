@@ -1,3 +1,5 @@
+import { NotFound } from 'http-errors'
+
 import { FileEntity, ResultEntity } from '../../src'
 import { Service } from '../../src/common'
 
@@ -15,6 +17,8 @@ abstract class BaseService<T> {
 
   async remove (id: string): Promise<ResultEntity> {
     const index: number = this.items.findIndex(item => item.name === id)
+
+    if (index < 0) throw new NotFound('Entity does not exist.')
 
     const data = this.items.at(index)
     this.items.splice(index, 1)
