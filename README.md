@@ -7,12 +7,14 @@ Filesrocket is an package of Node.js that allows you to manage your files and di
 
 ## Tutorial
 We create a project.
+
 ```
 mkdir my-filesrocket-example
 cd my-filesrocket-example
 ```
 
 We configure the work environment.
+
 ```
 npm i typescript ts-node -g
 npm init -y
@@ -20,14 +22,27 @@ tsc --init
 ```
 
 We install the packages necessaries for start using **Filesrocket**
+
 ```
-npm i express filesrocket filesrocket-local
+npm i express @filesrocket/filesrocket @filesrocket/local
 npm i @types/express -D
 ```
 
-Create a file **src/index.ts** in the root of the project and add the following content.
+Create a file **src/index.ts** in the root of the project.
 
-Register the services you are going to use
+1. Initialize app
+
+```ts
+import express from "express";
+
+const app = express();
+
+app.listen(3030, () => {
+  console.log("App execute in port:3030");
+});
+```
+
+2. Register the services you are going to use
 
 ```ts
 import { Filesrocket } from "@filesrocket/filesrocket";
@@ -42,32 +57,44 @@ const local = new LocalService({
 });
 
 // Registers the service to manage files locally.
-filesrocket.register("local-file", local.file);
+filesrocket.register("local", local.file);
 ```
 
-Register your endpoints.
+3. Register your endpoints.
 
 ```ts
+const Controller = filesrocket.controller("local");
+
 // Create/Upload files.
-app.post("/files", FileController.create(), (req, res) => {
+app.post("/files", Controller.create(), (req, res) => {
   const results = (req as any)[ROCKET_RESULT]
   res.status(200).json(results)
 })
 
 // List files.
-app.get("/files", FileController.list(), (req, res) => {
+app.get("/files", Controller.list(), (req, res) => {
   const results = (req as any)[ROCKET_RESULT]
   res.status(200).json(results)
 })
 
 // Remove files.
-app.delete("/files", FileController.remove(), (req, res) => {
+app.delete("/files", Controller.remove(), (req, res) => {
   const results = (req as any)[ROCKET_RESULT]
   res.status(200).json(results)
 })
 ```
 
-> Note: By default only one file can be uploaded at a time.
+Expose static files and execute server.
+
+```ts
+app.use("/uploads", express.static(path.resolve("uploads")));
+
+app.listen(3030, () => {
+  console.log("App execute in port:3030");
+});
+```
+
+> Note: By default only one file can be uploaded at a time. Later we will address how to upload multiple files, validations, etc,
 
 We run our development server
 ```
@@ -93,7 +120,6 @@ Below is a complete list of decorators that are currently available.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | `@Service()` | Class | This decorator allows us to define the **name** and **type** of entities (Files or Directories) that our services will handle. |
-| `@Filename()` | Method | This decorator adds a hash to a file name. |
 
 ## Services <a name="services"></a>
 A service is a predefined class that allows you to manage an entity either files or directories. This classes are composed by a decorator names `@Service` and interface named `ServiceMethods`.
