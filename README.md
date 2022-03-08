@@ -120,6 +120,7 @@ Below is a complete list of decorators that are currently available.
 | Name | Type | Description |
 | ---- | ---- | ----------- |
 | `@Service()` | Class | This decorator allows us to define the **name** and **type** of entities (Files or Directories) that our services will handle. |
+| `@Filename()` | Method | This decorator adds a hash to a file name. |
 
 ## Services <a name="services"></a>
 A service is a predefined class that allows you to manage an entity either files or directories. This classes are composed by a decorator names `@Service` and interface named `ServiceMethods`.
