@@ -24,7 +24,7 @@ tsc --init
 We install the packages necessaries for start using **Filesrocket**
 
 ```
-npm i express @filesrocket/filesrocket @filesrocket/local
+npm i express filesrocket filesrocket-local
 npm i @types/express -D
 ```
 
@@ -45,8 +45,8 @@ app.listen(3030, () => {
 2. Register the services you are going to use
 
 ```ts
-import { Filesrocket } from "@filesrocket/filesrocket";
-import { LocalService } from "@filesrocket/local";
+import { Filesrocket } from "filesrocket";
+import { LocalService } from "filesrocket-local";
 
 const filesrocket = new Filesrocket();
 
