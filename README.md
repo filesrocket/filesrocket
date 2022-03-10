@@ -102,13 +102,55 @@ To be able to interact with the files we access to the following endpoint.
 - Files: http://localhost:3030/files
  
 With this simple example we are ready to interact with the files.
+
+## Filesrocket
  
-## Examples
-We have also created many repositories with the most popular frameworks for you to play around with, to help as example guides.
+Filesrocket is a class that is in charge of orchestrating all the available functionalities; like registering services, getting them, forming controllers, etc.
+
+### Register services
  
-| Framework | Repository |
-| --------- | ---------- |
-| Express | [filesrocket-express-app](https://github.com/IvanZM123/filesrocket-express-app) |
+Adding a service in is so easy, see the example below.
+ 
+```ts
+const filesrocket = new Filesrocket()
+ 
+filesrocket.register("service-name", new MyService({...}))
+```
+ 
+### Recovering a service
+ 
+To obtain a service, you do it in the following way.
+ 
+```ts
+const Service = filesrocket.service("service-name")
+
+Service.create()
+
+Service.list()
+
+Service.remove()
+```
+ 
+### Recovering a controller
+ 
+This is very useful when we want to add it as a [middleware](https://expressjs.com/en/guide/using-middleware.html)
+ 
+```ts
+const Controller = filesrocket.controller("service-name")
+ 
+// Register enpoints.
+app.post("/files", Controller.create(), (req, res) => {
+  // ...
+})
+ 
+app.get("/files", Controller.list(), (req, res) => {
+  // ...
+})
+ 
+app.remove("/files", Controller.remove(), (req, res) => {
+  // ...
+})
+```
  
 ## Decorators
 Below is a complete list of decorators that are currently available.
@@ -341,55 +383,9 @@ app.delete("/files", controller.remove(), (req, res) => {
 > **Note**: The file identifier will change depending on the service you are using.
 > **Note**: For security reasons only one file can be uploaded at a time.
 
-## Filesrocket
+## Examples
+We have also created many repositories with the most popular frameworks for you to play around with, to help as example guides.
  
-Filesrocket is a class that is in charge of orchestrating all the available functionalities; like registering services, getting them, forming controllers, etc.
-
-### Register services
- 
-Adding a service in is so easy, see the example below.
- 
-```ts
-const filesrocket = new Filesrocket()
- 
-filesrocket.register("service-name", new MyService({...}))
-```
- 
-### Recovering a service
- 
-To obtain a service, you do it in the following way.
- 
-```ts
-const Service = filesrocket.service("service-name")
-
-Service.create()
-
-Service.list()
-
-Service.remove()
-```
- 
-> **Note**: Events will only be executed by controllers.
- 
-### Recovering a controller
- 
-This is very useful when we want to add it as a middleware.
- 
-> Note: To know more about **Middlewares** visit [here](https://expressjs.com/en/guide/using-middleware.html)
- 
-```ts
-const Controller = filesrocket.controller("service-name")
- 
-// Register enpoints.
-app.post("/files", Controller.create(), (req, res) => {
-  // ...
-})
- 
-app.get("/files", Controller.list(), (req, res) => {
-  // ...
-})
- 
-app.remove("/files", Controller.remove(), (req, res) => {
-  // ...
-})
-```
+| Framework | Repository |
+| --------- | ---------- |
+| Express | [filesrocket-express-app](https://github.com/IvanZM123/filesrocket-express-app) |
