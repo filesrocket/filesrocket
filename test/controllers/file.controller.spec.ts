@@ -55,6 +55,16 @@ describe('POST /files', () => {
           done()
         })
     })
+
+    it('Skip the request when it is different from multipart', (done) => {
+      const name = 'Filesrocket'
+
+      request
+        .post(path)
+        .send({ name })
+        .expect(200)
+        .expect('Content-type', /json/, done)
+    })
   })
 
   describe('when creating a file is failure', () => {
@@ -64,14 +74,6 @@ describe('POST /files', () => {
         .set('Content-type', 'multipart/form-data')
         .expect(500)
         .expect(/Multipart: Boundary not found/, done)
-    })
-
-    it('When sending a field other than file', (done) => {
-      request
-        .post(path)
-        .attach('image', resolve('test/fixtures/filesrocket.png'))
-        .expect(400)
-        .expect(/BadRequestError: The file field does not exist./, done)
     })
 
     it('When the file extension is not allowed.', (done) => {
