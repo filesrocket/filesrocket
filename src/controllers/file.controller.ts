@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
-import { parse } from 'path'
+import typeis from 'type-is'
 import Busboy from 'busboy'
+import path from 'path'
 
 import {
   ControllerMethods,
@@ -21,10 +22,12 @@ export class FileController extends BaseController implements ControllerMethods 
   create (options?: Partial<UploadOptions>): Middleware {
     return async (req: Request, res: Response, next: NextFunction) => {
       try {
+        if (!typeis(req, ['multipart'])) return next()
+
         const busboy = new Busboy({
-          ...options,
+          limits: { files: 1 },
           headers: req.headers,
-          limits: { files: 1 }
+          ...options
         })
 
         busboy.on('field', (fieldname, value) => {
@@ -49,12 +52,8 @@ export class FileController extends BaseController implements ControllerMethods 
               )
             }
 
-            if (fieldname !== 'file') {
-              return next(new BadRequest('The file field does not exist.'))
-            }
-
             if (!name) {
-              return next(new BadRequest('The file field is empty.'))
+              return next(new BadRequest('The content is empty'))
             }
 
             if (!exts.length) {
@@ -63,7 +62,7 @@ export class FileController extends BaseController implements ControllerMethods 
               return next()
             }
 
-            const { ext } = parse(name)
+            const { ext } = path.parse(name)
 
             if (!exts.includes(ext)) {
               const extensions = exts.join(', ')
@@ -75,7 +74,9 @@ export class FileController extends BaseController implements ControllerMethods 
             }
 
             const data = await this.service.create(payload, req.query)
+
             req = Object.defineProperty(req, ROCKET_RESULT, { value: data })
+
             next()
           }
         )
