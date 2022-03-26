@@ -1,6 +1,5 @@
 import { generateRandomFilename } from './utils'
 import { TypeEntities } from './declarations'
-import EventEmitter from 'events'
 
 import { DirectoryController } from './controllers/directory.controller'
 import { FileController } from './controllers/file.controller'
@@ -11,7 +10,7 @@ export interface ServiceOptions {
 
 type Constructor<T = {}> = new (...args: any[]) => T;
 
-function ApplyMixins<T extends Constructor> (target: T, ...constructors: any[]) {
+export function ApplyMixins<T extends Constructor> (target: T, ...constructors: any[]) {
   constructors.forEach(constructor => {
     const names: string[] = Object.getOwnPropertyNames(constructor.prototype)
 
@@ -40,15 +39,18 @@ export function Service (options: ServiceOptions) {
       ? FileController
       : DirectoryController
 
-    const Service = ApplyMixins(
-      class extends Constructor {
-        entityType = type
-        controller = controller
-      },
-      EventEmitter
-    )
+    // const Service = ApplyMixins(
+    //   class extends Constructor {
+    //     entityType = type
+    //     controller = controller
+    //   },
+    //   EventEmitter
+    // )
 
-    return Service as any
+    return class extends Constructor {
+      entityType = type
+      controller = controller
+    }
   }
 }
 
