@@ -1,6 +1,7 @@
+import { NotFound } from 'http-errors'
 import supertest from 'supertest'
-import express from 'express'
 import { resolve } from 'path'
+import express from 'express'
 import assert from 'assert'
 
 import { Filesrocket, InputFile } from '../../src/index'
@@ -23,11 +24,19 @@ class FileService {
   }
 
   async list (query: Record<string, unknown>): Promise<any> {
-    return items
+    return this.items
   }
 
   async remove (id: string, query: Record<string, unknown>): Promise<any> {
-    return this.items.filter((item) => item.name !== id)
+    const index = this.items.findIndex((item) => item.name === id)
+
+    if (index < 0) throw new NotFound('The file not exist')
+
+    const entity = this.items.at(index)
+
+    this.items.splice(index, 1)
+
+    return entity
   }
 }
 
@@ -35,32 +44,38 @@ filesrocket.register('local', new FileService())
 
 const service = filesrocket.controller('local')
 
-export const items: Partial<InputFile>[] = [
-  { name: 'image-one.jpg' },
-  { name: 'image-two.jpg' },
-  { name: 'image-three.jpg' }
-]
-
 const path: string = '/files'
 
 const app = express()
 
-app.post(path, async (req, res) => {
-  const files = await service?.create(req, {})
-  res.status(200).json(files)
+app.post(path, async (req, res, next) => {
+  try {
+    const files = await service?.create(req, {})
+    res.status(200).json(files)
+  } catch (error) {
+    next(error)
+  }
 })
 
-app.get(path, async (req, res) => {
-  const files = await service?.list(req.query)
-  res.status(200).json(files)
+app.get(path, async (req, res, next) => {
+  try {
+    const files = await service?.list(req.query)
+    res.status(200).json(files)
+  } catch (error) {
+    next(error)
+  }
 })
 
-app.delete(path, async (req, res) => {
-  const { id } = req.query
+app.delete(path, async (req, res, next) => {
+  try {
+    const { id } = req.query
 
-  const file = await service?.remove(id as string, req.query)
+    const file = await service?.remove(id as string, req.query)
 
-  res.status(200).json(file)
+    res.status(200).json(file)
+  } catch (error) {
+    next(error)
+  }
 })
 
 const request = supertest(app)
@@ -126,28 +141,31 @@ describe('GET /files', () => {
   })
 })
 
-describe.skip('DELETE /files', () => {
+describe('DELETE /files', () => {
   describe('when deleting a file is successful', () => {
     it('Remove file', (done) => {
-      const url = `${path}?id=image-one.jpg`
+      const url = `${path}?id=one.jpg`
       request
         .delete(url)
         .expect(200)
         .expect('Content-Type', /json/)
         .end((err, res) => {
           if (err) return done(err)
+
           assert.ok(typeof res.body === 'object')
+          assert.ok(res.body.name === 'one.jpg')
+
           done()
         })
     })
   })
 
   describe('when deleting a file is failure', () => {
-    it('Remove file when id is not sent', (done) => {
+    it('Remove file when not exist', (done) => {
       request
         .delete(path)
-        .expect(400)
-        .expect(/BadRequestError: The id property is required./, done)
+        .expect(404)
+        .expect(/NotFoundError: The file not exist/, done)
     })
   })
 })
