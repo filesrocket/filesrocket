@@ -1,9 +1,6 @@
 import { generateRandomFilename } from './utils'
 import { TypeEntities } from './declarations'
 
-import { DirectoryController } from './controllers/directory.controller'
-import { FileController } from './controllers/file.controller'
-
 export interface ServiceOptions {
   type: TypeEntities;
 }
@@ -32,27 +29,27 @@ export function ApplyMixins<T extends Constructor> (target: T, ...constructors: 
  * need to create a custom service.
  * @param options Options.
  */
-export function Service (options: ServiceOptions) {
-  return (Constructor: any) => {
-    const { type } = options
-    const controller = type !== 'Directories'
-      ? FileController
-      : DirectoryController
+// export function Service (options: ServiceOptions) {
+//   return (Constructor: any) => {
+//     const { type } = options
+//     const controller = type !== 'Directories'
+//       ? FileController
+//       : DirectoryController
 
-    // const Service = ApplyMixins(
-    //   class extends Constructor {
-    //     entityType = type
-    //     controller = controller
-    //   },
-    //   EventEmitter
-    // )
+//     // const Service = ApplyMixins(
+//     //   class extends Constructor {
+//     //     entityType = type
+//     //     controller = controller
+//     //   },
+//     //   EventEmitter
+//     // )
 
-    return class extends Constructor {
-      entityType = type
-      controller = controller
-    }
-  }
-}
+//     return class extends Constructor {
+//       entityType = type
+//       controller = controller
+//     }
+//   }
+// }
 
 export type FunctionStrategy<T> = (data: T) => T;
 

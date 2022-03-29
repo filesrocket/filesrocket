@@ -1,49 +1,46 @@
-import { ControllerMethods, ServiceMethods, Rocket, Service } from './index'
-import { DirectoryController } from './controllers/directory.controller'
 import { FileController } from './controllers/file.controller'
+import { InputFile, ServiceMethods } from './index'
+
+interface Rocket {
+  name: string;
+  controller: FileController;
+  service: Partial<ServiceMethods>;
+}
 
 export class Filesrocket {
   private entities: Map<string, Rocket> = new Map();
 
   /**
-   * Method responsible for registering services
-   * @param service Service
-   * @param hooks Hooks
+   * Register a new service
+   * @param name Service name
+   * @param service ServiceMethods
    */
   register (name: string, service: Partial<ServiceMethods<any>>) {
-    const Controller = (service as any).controller as
-      | typeof FileController
-      | typeof DirectoryController
-      | undefined
-
-    if (!Controller) {
-      throw new Error('Add the @Service controller to your service')
-    }
-
-    this.entities.set(name, {
-      name,
-      service: service as ServiceMethods<any>,
-      controller: new Controller(service)
-    })
+    const controller = new FileController(service)
+    this.entities.set(name, { name, service, controller })
   }
 
   /**
    * Method responsible for returning a service
    * @param name Service name
    */
-  service <T> (name: string) {
+  service (name: string): Partial<ServiceMethods<InputFile>> | undefined {
     const data = this.entities.get(name)
-    if (!data) throw new Error('Service is not registered')
-    return data.service as Service<T>
+
+    if (!data) return
+
+    return data.service
   }
 
   /**
-   * Method responsible for returning a controller
-   * @param name Controller name
+   * Method responsible for returning controller
+   * @param name Service name
    */
-  controller (name: string): ControllerMethods {
+  controller (name: string): FileController | undefined {
     const data = this.entities.get(name)
-    if (!data) throw new Error('Controller is not registered')
+
+    if (!data) return
+
     return data.controller
   }
 

@@ -1,5 +1,5 @@
-import uniqid from 'uniqid'
 import { parse } from 'path'
+import uniqid from 'uniqid'
 
 /**
  * Generate a unique filename.

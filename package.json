@@ -27,7 +27,6 @@
     "busboy": "1.5.0",
     "express": "4.17.1",
     "http-errors": "1.7.2",
-    "type-is": "^1.6.18",
     "uniqid": "5.4.0"
   },
   "devDependencies": {
@@ -37,7 +36,6 @@
     "@types/mocha": "^9.1.0",
     "@types/node": "^17.0.17",
     "@types/supertest": "^2.0.11",
-    "@types/type-is": "^1.6.3",
     "@types/uniqid": "^5.3.1",
     "@typescript-eslint/eslint-plugin": "^5.10.1",
     "@typescript-eslint/parser": "^5.10.1",

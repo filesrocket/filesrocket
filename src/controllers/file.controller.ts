@@ -1,100 +1,139 @@
-import { NextFunction, Request, Response } from 'express'
-import { Readable } from 'stream'
-import typeis from 'type-is'
+import { Request } from 'express'
 import busboy from 'busboy'
 import path from 'path'
 
 import {
-  ControllerMethods,
-  FileEntity,
-  ROCKET_RESULT,
+  ServiceMethods,
   UploadOptions,
-  ServiceMethods
+  OutputEntity,
+  InputFile,
+  Query
 } from '../declarations'
-import { NotImplemented, BadRequest } from '../errors'
+import { NotImplemented, BadRequest, BandwidthLimitExceeded } from '../errors'
 import { BaseController } from './base.controller'
-import { Middleware } from '../index'
+import { Counter } from '../helpers/counter'
 
-export class FileController extends BaseController implements ControllerMethods {
+interface Params extends UploadOptions {
+  query: { path: string } & Query;
+}
+
+export class FileController extends BaseController {
   constructor (protected readonly service: Partial<ServiceMethods>) {
     super(service)
   }
 
-  create (options: Partial<UploadOptions> = {}): Middleware {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        if (!typeis(req, ['multipart'])) return next()
-
-        if (typeof this.service.create !== 'function') {
-          throw new NotImplemented('The method is not implemented')
-        }
-
-        const service = this.service as ServiceMethods
-
-        const items = await this.parse(req, options)
-
-        const files = await Promise.all(
-          items.map(item => service.create(item, req.query))
-        )
-
-        req = Object.defineProperty(req, ROCKET_RESULT, { value: files })
-
-        next()
-      } catch (error) {
-        next(error)
-      }
-    }
-  }
-
-  async parse (req: Request, config: Partial<UploadOptions>): Promise<FileEntity[]> {
+  async create (req: Request, params: Partial<Params> = {}): Promise<OutputEntity[]> {
     return new Promise((resolve, reject) => {
-      const files: FileEntity[] = []
-      const buffers: Record<string, any> = {}
+      const contentType = req.headers['content-type']
 
-      const bb = busboy({
-        ...config,
-        headers: req.headers as any
-      })
+      if (!contentType || !contentType.includes('multipart')) {
+        return resolve([])
+      }
 
-      bb.on('field', (name, value, info) => {
-        req.body = Object.assign(req.body, { [name]: value })
-      })
+      const bb = busboy({ ...params, headers: req.headers })
+      const counter = new Counter()
 
-      bb.on('file', (fieldname, stream, { filename, encoding, mimeType }) => {
-        if (!filename) throw new BadRequest('The content is empty')
+      const uploadedFiles: OutputEntity[] = []
+      let isReadingFinished = false
 
-        const extnames = config.extnames || []
+      req.body = Object.create(null)
 
-        if (extnames.length > 0) {
-          const { ext } = path.parse(filename)
+      function done (err?: any) {
+        if (!err && counter.isZero && isReadingFinished) {
+          req.unpipe(bb)
+          bb.removeAllListeners()
 
-          if (!extnames.includes(ext)) {
-            return reject(
-              new BadRequest(`The ${ext} is not allowed`)
-            )
-          }
+          return resolve(uploadedFiles)
         }
 
-        buffers[filename] = []
+        if (err) {
+          req.unpipe(bb)
+          bb.removeAllListeners()
 
-        stream.on('data', (chunk) => {
-          buffers[filename].push(chunk)
-        })
+          return reject(err)
+        }
+      }
 
-        stream.on('end', () => {
-          files.push({
-            fieldname,
-            stream: Readable.from(buffers[filename]),
-            name: filename,
-            encoding,
-            mimetype: mimeType
-          })
-        })
+      const saveFile = async (payload: InputFile) => {
+        if (typeof this.service.create !== 'function') {
+          return reject(new NotImplemented('Method not implemented'))
+        }
+
+        const file = await this.service.create(payload, params.query)
+
+        uploadedFiles.push(file)
+
+        counter.decrement()
+
+        done()
+      }
+
+      // Manage text fields
+      bb.on('field', (fieldname, value, { nameTruncated, valueTruncated }) => {
+        if (!fieldname) {
+          return done(new BadRequest('MISSING_FIELDNAME'))
+        }
+
+        if (nameTruncated) {
+          return done(new BandwidthLimitExceeded('FIELDNAME_LIMIT_EXCEEDED'))
+        }
+
+        if (valueTruncated) {
+          return done(new BandwidthLimitExceeded('VALUE_LIMIT_EXCEEDED'))
+        }
+
+        req.body = Object.assign(req.body, { [fieldname]: value })
       })
 
-      bb.on('finish', () => resolve(files))
+      bb.on('file', async (fieldname, stream, { filename, encoding, mimeType }) => {
+        if (!filename) return stream.resume()
 
-      bb.on('error', (error) => reject(error))
+        const payload: InputFile = {
+          fieldname,
+          name: filename,
+          stream,
+          encoding,
+          mimetype: mimeType
+        }
+
+        counter.increment()
+
+        const extnames: string[] = params.extnames || []
+
+        // Not required extension
+        if (!extnames.length) {
+          return saveFile(payload)
+        }
+
+        const { ext } = path.parse(filename)
+
+        // Extension not allowed
+        if (!extnames.includes(ext)) {
+          counter.decrement()
+          return stream.resume()
+        }
+
+        return saveFile(payload)
+      })
+
+      bb.on('finish', () => {
+        isReadingFinished = true
+        done()
+      })
+
+      bb.on('error', (err) => done(err))
+
+      bb.on('fieldsLimit', () =>
+        done(new BandwidthLimitExceeded('FIELDS_LIMIT_EXCEEDED'))
+      )
+
+      bb.on('filesLimit', () =>
+        done(new BandwidthLimitExceeded('FILES_LIMIT_EXCEEDED'))
+      )
+
+      bb.on('partsLimit', () =>
+        done(new BandwidthLimitExceeded('PARTS_LIMIT_EXCEEDED'))
+      )
 
       req.pipe(bb)
     })

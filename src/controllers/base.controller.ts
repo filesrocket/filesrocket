@@ -1,51 +1,28 @@
-import { Request, Response, NextFunction } from 'express'
+import { Query, ServiceMethods, OutputEntity, Paginated } from '../declarations'
+import { NotImplemented } from '../errors'
 
-import { ControllerMethods, ROCKET_RESULT, Middleware } from '../index'
-import { BadRequest, NotImplemented } from '../errors'
-import { ServiceMethods } from '../declarations'
+export interface Params extends Query {
+  path: string;
+  size: number;
+  page: string | number;
+}
 
-type Service = Partial<ServiceMethods<any>>
+export class BaseController {
+  constructor (protected service: Partial<ServiceMethods<any>>) {}
 
-export class BaseController implements Omit<ControllerMethods, 'create'> {
-  constructor (protected readonly service: Service) {}
-
-  list (): Middleware {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        if (typeof this.service.list !== 'function') {
-          return next(new NotImplemented('The list method not implemented.'))
-        }
-
-        const data = await this.service.list(req.query)
-
-        req = Object.defineProperty(req, ROCKET_RESULT, { value: data })
-
-        next()
-      } catch (error) {
-        next(error)
-      }
+  async list (query: Partial<Params> = {}): Promise<Paginated<OutputEntity> | OutputEntity[]> {
+    if (typeof this.service.list !== 'function') {
+      throw new NotImplemented('The list method not implemented')
     }
+
+    return this.service.list(query)
   }
 
-  remove (): Middleware {
-    return async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        if (typeof this.service.remove !== 'function') {
-          return next(new NotImplemented('The remove method not implemented.'))
-        }
-
-        if (!req.query.id) {
-          return next(new BadRequest('The id property is required.'))
-        }
-
-        const data = await this.service.remove(String(req.query.id), req.query)
-
-        req = Object.defineProperty(req, ROCKET_RESULT, { value: data })
-
-        next()
-      } catch (error) {
-        next(error)
-      }
+  async remove (id: string, query: Query = {}): Promise<OutputEntity> {
+    if (typeof this.service.remove !== 'function') {
+      throw new NotImplemented('The remove method not implemented')
     }
+
+    return this.service.remove(id, query)
   }
 }

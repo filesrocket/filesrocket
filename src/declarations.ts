@@ -1,19 +1,6 @@
-import { NextFunction, Request, Response } from 'express'
-import EventEmitter from 'events'
-
-export interface Query {
-  [key: string]: any;
-}
-
-export const ROCKET_RESULT = 'rocketResult'
+export type Query = Record<string, any>
 
 export type TypeEntities = 'Files' | 'Directories';
-
-export type Middleware = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => Promise<any> | any;
 
 export interface Pagination {
   /**
@@ -57,7 +44,7 @@ export interface Paginated<T> {
   prevPageToken?: string | number;
 }
 
-export interface FileEntity {
+export interface InputFile {
   name: string;
   /**
    * Represent a Readable of Node.js. For more information visit:
@@ -70,11 +57,11 @@ export interface FileEntity {
   mimetype: string;
 }
 
-export interface DirectoryEntity extends Query {
+export interface InputDirectory extends Query {
   name: string;
 }
 
-export interface ResultEntity extends Query {
+export interface OutputEntity extends Query {
   /**
    * Identifier entity.
    */
@@ -126,24 +113,24 @@ export interface UploadOptions {
   extnames: string[];
 }
 
-export interface ServiceMethods<T = Partial<FileEntity>, K = ResultEntity> {
+export interface ServiceMethods<T = Partial<InputFile>> {
   /**
    * Create a new entity.
    * @param data Data.
    * @param query Query.
    */
-  create(data: T, query?: Query): Promise<K>;
+  create(data: T, query?: Query): Promise<OutputEntity>;
   /**
    * Gets a list of entities.
    * @param query Query.
    */
-  list(query?: Query): Promise<Paginated<K> | K[]>;
+  list(query?: Query): Promise<Paginated<OutputEntity> | OutputEntity[]>;
   /**
    * Remove a entity.
    * @param id Identifier.
    * @param query Query.
    */
-  remove(id: string, query?: Query): Promise<K>;
+  remove(id: string, query?: Query): Promise<OutputEntity>;
 }
 
 export interface FileManager {
@@ -151,28 +138,7 @@ export interface FileManager {
 }
 
 export interface DirectoryManager {
-  directory: ServiceMethods<DirectoryEntity>;
+  directory: ServiceMethods<InputDirectory>;
 }
 
-export interface ControllerMethods {
-  /**
-   * Middleware reponsible of the creation of an entity.
-   */
-  create(query?: Query): Middleware;
-  /**
-   * Middleware reponsible of the list of entities.
-   */
-  list(query?: Query): Middleware;
-  /**
-   * Middleware reponsible of the deletion of entities.
-   */
-  remove(query?: Query): Middleware;
-}
-
-export interface Service<T> extends ServiceMethods<T>, EventEmitter {}
-
-export interface Rocket {
-  name: string;
-  controller: ControllerMethods;
-  service: ServiceMethods;
-}
+export interface Service<T> extends ServiceMethods<T> {}

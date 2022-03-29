@@ -1,17 +1,11 @@
-import { Filesrocket } from '../src/service'
-import { Service } from '../src/common'
 import assert from 'assert'
+
+import { Filesrocket } from '../src/service'
 
 const filesrocket = new Filesrocket()
 
-@Service({
-  type: 'Files'
-})
 class OneService {}
 
-@Service({
-  type: 'Directories'
-})
 class TwoService {}
 
 filesrocket.register('serviceOne', new OneService())

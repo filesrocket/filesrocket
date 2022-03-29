@@ -1,4 +1,5 @@
 import assert from 'assert'
+
 import { generateRandomFilename, omitProps } from '../src/utils'
 
 type Sex = 'M' | 'F';
