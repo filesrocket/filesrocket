@@ -37,7 +37,7 @@ describe('Filesrocket service', () => {
   })
 
   it('Get a service that does not exist', () => {
-    const service = filesrocket.controller('random')
+    const service = filesrocket.service('random')
     assert.ok(typeof service === 'undefined')
   })
 
