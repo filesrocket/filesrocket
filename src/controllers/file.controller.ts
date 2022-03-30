@@ -11,6 +11,7 @@ import {
 } from '../declarations'
 import { NotImplemented, BadRequest, BandwidthLimitExceeded } from '../errors'
 import { BaseController } from './base.controller'
+import { generateRandomFilename } from '../utils'
 import { Counter } from '../helpers/counter'
 
 interface Params extends UploadOptions {
@@ -90,7 +91,7 @@ export class FileController extends BaseController {
 
         const payload: InputFile = {
           fieldname,
-          name: filename,
+          name: generateRandomFilename(filename),
           stream,
           encoding,
           mimetype: mimeType

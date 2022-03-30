@@ -63,7 +63,7 @@ describe('POST /files', () => {
       .end((err, res) => {
         if (err) return done(err)
         assert.ok(res.body.length > 0)
-        assert.ok(res.body[0].name === 'filesrocket.png')
+        assert.ok(res.body[0].name !== 'filesrocket.png')
         done()
       })
   })
