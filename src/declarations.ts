@@ -1,7 +1,5 @@
 export type Query = Record<string, any>
 
-export type TypeEntities = 'Files' | 'Directories';
-
 export interface Pagination {
   /**
    * Represents the number of entities that can be obtained
@@ -55,10 +53,6 @@ export interface InputFile {
   fieldname: string;
   encoding: string;
   mimetype: string;
-}
-
-export interface InputDirectory extends Query {
-  name: string;
 }
 
 export interface OutputEntity extends Query {
@@ -135,10 +129,6 @@ export interface ServiceMethods<T = Partial<InputFile>> {
 
 export interface FileManager {
   file: ServiceMethods;
-}
-
-export interface DirectoryManager {
-  directory: ServiceMethods<InputDirectory>;
 }
 
 export interface Service<T> extends ServiceMethods<T> {}
