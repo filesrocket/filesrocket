@@ -50,7 +50,10 @@ const app = express()
 
 app.post(path, async (req, res, next) => {
   try {
-    const files = await service?.create(req, {})
+    const files = await service?.create(req, {
+      extnames: ['.png']
+    })
+
     res.status(200).json(files)
   } catch (error) {
     next(error)
@@ -80,50 +83,52 @@ app.delete(path, async (req, res, next) => {
 
 const request = supertest(app)
 
-describe.skip('POST /files', () => {
-  describe('when creating a file is successful', () => {
-    it('Create file', (done) => {
-      request
-        .post(path)
-        .set('Content-type', 'multipart/form-data')
-        .set('Connection', 'keep-alive')
-        .attach('file', resolve('test/fixtures/filesrocket.png'))
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err)
-          assert.ok(res.body.name === 'filesrocket.png')
-          done()
-        })
-    })
-
-    it('Skip the request when it is different from multipart', (done) => {
-      const name = 'Filesrocket'
-
-      request
-        .post(path)
-        .send({ name })
-        .expect(200)
-        .expect('Content-type', /json/, done)
-    })
+describe('POST /files', () => {
+  it('Create file', (done) => {
+    request
+      .post(path)
+      .set('Content-type', 'multipart/form-data')
+      .set('Connection', 'keep-alive')
+      .attach('file', resolve('test/fixtures/filesrocket.png'))
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) return done(err)
+        assert.ok(res.body.length > 0)
+        assert.ok(res.body[0].name === 'filesrocket.png')
+        done()
+      })
   })
 
-  describe('when creating a file is failure', () => {
-    it('When no field is sent', (done) => {
-      request
-        .post(path)
-        .set('Content-type', 'multipart/form-data')
-        .expect(500)
-        .expect(/Multipart: Boundary not found/, done)
-    })
+  it('Upload a file when the extension is not allowed', (done) => {
+    request
+      .post(path)
+      .set('Content-type', 'multipart/form-data')
+      .set('Connection', 'keep-alive')
+      .attach('file', resolve('test/fixtures/filesrocket.md'))
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) return done(err)
+        assert.ok(res.body.length === 0)
+        done()
+      })
+  })
 
-    it('When the file extension is not allowed.', (done) => {
-      request
-        .post(path)
-        .attach('file', resolve('test/fixtures/filesrocket.md'))
-        .expect(400)
-        .expect(/BadRequestError: The .md extension is not allowed./, done)
-    })
+  it('Send different request to multipart', (done) => {
+    request
+      .post(path)
+      .set('Content-Type', 'application/json')
+      .send({})
+      .expect(200)
+      .expect('Content-Type', /json/)
+      .end((err, res) => {
+        if (err) return done(err)
+
+        assert.ok(res.body.length === 0)
+
+        done()
+      })
   })
 })
 
