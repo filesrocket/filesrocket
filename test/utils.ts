@@ -1,6 +1,9 @@
 import FormData from 'form-data'
 import stream from 'stream'
 
+import filesrocket from './config'
+import { UploadOptions } from '../src/declarations'
+
 type CallbackFunction = (err?: any, results?: any) => void
 
 export function submit (controller: any, form: FormData, cb: CallbackFunction) {
@@ -21,4 +24,14 @@ export function submit (controller: any, form: FormData, cb: CallbackFunction) {
 
     form.pipe(req)
   })
+}
+
+export function middleware (options: Partial<UploadOptions> = {}) {
+  return (req: any) => {
+    const service = filesrocket.controller('local')
+
+    if (!service) return
+
+    return service.create(req, options)
+  }
 }

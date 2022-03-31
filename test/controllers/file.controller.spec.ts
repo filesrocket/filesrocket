@@ -3,15 +3,10 @@ import FormData from 'form-data'
 import { resolve } from 'path'
 import express from 'express'
 import assert from 'assert'
-// import fs from 'fs'
+import fs from 'fs'
 
-import { FileService } from '../services/file.service'
-import { Filesrocket } from '../../src/index'
-import { submit } from '../utils'
-
-const filesrocket = new Filesrocket()
-
-filesrocket.register('local', new FileService())
+import { submit, middleware } from '../utils'
+import filesrocket from '../config'
 
 const service = filesrocket.controller('local')
 
@@ -60,79 +55,143 @@ app.delete(path, async (req, res, next) => {
 const request = supertest(app)
 
 describe('POST /files', () => {
-  it('Create file', (done) => {
-    request
-      .post(path)
-      .set('Content-type', 'multipart/form-data')
-      .set('Connection', 'keep-alive')
-      .attach('file', resolve('test/fixtures/filesrocket.png'))
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) return done(err)
-        assert.ok(res.body.length > 0)
-        assert.ok(res.body[0].name !== 'filesrocket.png')
-        done()
-      })
-  })
-
-  it('Upload a file when the extension is not allowed', (done) => {
-    request
-      .post(path)
-      .set('Content-type', 'multipart/form-data')
-      .set('Connection', 'keep-alive')
-      .attach('file', resolve('test/fixtures/filesrocket.md'))
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) return done(err)
-        assert.ok(res.body.length === 0)
-        done()
-      })
-  })
-
-  it('Send different request to multipart', (done) => {
-    request
-      .post(path)
-      .set('Content-Type', 'application/json')
-      .send({})
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) return done(err)
-
-        assert.ok(res.body.length === 0)
-
-        done()
-      })
-  })
-
-  it('When you exceed the number of fields', () => {
-    const formdata = new FormData()
-
-    formdata.append('one', 'one')
-    formdata.append('two', 'two')
-    formdata.append('three', 'three')
-
-    if (!service) return
-
-    const middleware = (params: any) => {
-      return (req: any) => {
-        return service.create(req, params)
-      }
-    }
-
-    const func = middleware({
-      limits: {
-        fields: 1
-      }
+  describe('Success handling', () => {
+    it('Create file', (done) => {
+      request
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .set('Connection', 'keep-alive')
+        .attach('file', resolve('test/fixtures/filesrocket.png'))
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+          assert.ok(res.body.length > 0)
+          assert.ok(res.body[0].name !== 'filesrocket.png')
+          done()
+        })
     })
 
-    submit(func, formdata, (err, files) => {
-      const { statusCode, message } = err
+    it('Upload a file when the extension is not allowed', (done) => {
+      request
+        .post(path)
+        .set('Content-type', 'multipart/form-data')
+        .set('Connection', 'keep-alive')
+        .attach('file', resolve('test/fixtures/filesrocket.md'))
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+          assert.ok(res.body.length === 0)
+          done()
+        })
+    })
 
-      assert.ok(statusCode === 509)
-      assert.ok(message === 'FIELDS_LIMIT_EXCEEDED')
+    it('Send different request to multipart', (done) => {
+      request
+        .post(path)
+        .set('Content-Type', 'application/json')
+        .send({})
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .end((err, res) => {
+          if (err) return done(err)
+
+          assert.ok(res.body.length === 0)
+
+          done()
+        })
+    })
+  })
+
+  describe('Error handling', () => {
+    it('When you exceed the number of files', (done) => {
+      const formdata = new FormData()
+
+      const imageOne = fs.createReadStream(
+        resolve('test/fixtures/filesrocket-banner.png')
+      )
+
+      const imageTwo = fs.createReadStream(
+        resolve('test/fixtures/filesrocket.png')
+      )
+
+      formdata.append('one', imageOne)
+      formdata.append('one', imageTwo)
+
+      const func = middleware({
+        limits: { files: 1 }
+      })
+
+      submit(func, formdata, (err) => {
+        const { statusCode, message } = err
+
+        assert.ok(statusCode === 509)
+        assert.ok(message === 'FILES_LIMIT_EXCEEDED')
+
+        done()
+      })
+    })
+
+    it('When you exceed the number of fields', (done) => {
+      const formdata = new FormData()
+
+      formdata.append('one', 'one')
+      formdata.append('two', 'two')
+      formdata.append('three', 'three')
+
+      const handler = middleware({
+        limits: { fields: 1 }
+      })
+
+      submit(handler, formdata, (err) => {
+        const { statusCode, message } = err
+
+        assert.ok(statusCode === 509)
+        assert.ok(message === 'FIELDS_LIMIT_EXCEEDED')
+
+        done()
+      })
+    })
+
+    it('When you exceed the number of parts', (done) => {
+      const formdata = new FormData()
+
+      formdata.append('one', 'one')
+      formdata.append('two', 'two')
+      formdata.append('three', 'three')
+
+      const handler = middleware({
+        limits: { parts: 2 }
+      })
+
+      submit(handler, formdata, (err) => {
+        const { statusCode, message } = err
+
+        assert.ok(statusCode === 509)
+        assert.ok(message === 'PARTS_LIMIT_EXCEEDED')
+
+        done()
+      })
+    })
+
+    it('when the size of the field value is exceeded', (done) => {
+      const formdata = new FormData()
+
+      formdata.append('banner', 'filesrocket.jpg')
+
+      const handler = middleware({
+        limits: { fieldSize: 4 }
+      })
+
+      submit(handler, formdata, (err) => {
+        const { statusCode, message } = err
+
+        assert.ok(statusCode === 509)
+        assert.ok(message === 'VALUE_LIMIT_EXCEEDED')
+
+        done()
+      })
     })
   })
 })
