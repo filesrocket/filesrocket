@@ -1,7 +1,5 @@
-import supertest from 'supertest'
 import FormData from 'form-data'
 import { resolve } from 'path'
-import express from 'express'
 import assert from 'assert'
 import fs from 'fs'
 
@@ -10,97 +8,44 @@ import filesrocket from '../config'
 
 const service = filesrocket.controller('local')
 
-const path: string = '/files'
-
-const app = express()
-
-app.post(path, async (req, res, next) => {
-  try {
-    const files = await service?.create(req, {
-      extnames: ['.png'],
-      limits: {
-        files: 1,
-        fields: 1,
-        parts: 3
-      }
-    })
-
-    res.status(200).json(files)
-  } catch (error) {
-    next(error)
-  }
-})
-
-app.get(path, async (req, res, next) => {
-  try {
-    const files = await service?.list(req.query)
-    res.status(200).json(files)
-  } catch (error) {
-    next(error)
-  }
-})
-
-app.delete(path, async (req, res, next) => {
-  try {
-    const { id } = req.query
-
-    const file = await service?.remove(id as string, req.query)
-
-    res.status(200).json(file)
-  } catch (error) {
-    next(error)
-  }
-})
-
-const request = supertest(app)
-
 describe('POST /files', () => {
   describe('Success handling', () => {
     it('Create file', (done) => {
-      request
-        .post(path)
-        .set('Content-type', 'multipart/form-data')
-        .set('Connection', 'keep-alive')
-        .attach('file', resolve('test/fixtures/filesrocket.png'))
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err)
-          assert.ok(res.body.length > 0)
-          assert.ok(res.body[0].name !== 'filesrocket.png')
-          done()
-        })
+      const formdata = new FormData()
+
+      const image = fs.createReadStream(
+        resolve('test/fixtures/filesrocket.png')
+      )
+
+      formdata.append('files', image)
+
+      submit(middleware(), formdata, (err, files) => {
+        if (err) return done(err)
+
+        assert.ok(files.length > 0)
+
+        done()
+      })
     })
 
     it('Upload a file when the extension is not allowed', (done) => {
-      request
-        .post(path)
-        .set('Content-type', 'multipart/form-data')
-        .set('Connection', 'keep-alive')
-        .attach('file', resolve('test/fixtures/filesrocket.md'))
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err)
-          assert.ok(res.body.length === 0)
-          done()
-        })
-    })
+      const formdata = new FormData()
 
-    it('Send different request to multipart', (done) => {
-      request
-        .post(path)
-        .set('Content-Type', 'application/json')
-        .send({})
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err)
+      const file = fs.createReadStream(
+        resolve('test/fixtures/filesrocket.md')
+      )
 
-          assert.ok(res.body.length === 0)
+      formdata.append('files', file)
 
-          done()
-        })
+      const handler = middleware({ extnames: ['.png'] })
+
+      submit(handler, formdata, (err, files) => {
+        if (err) return done(err)
+
+        assert.ok(files.length === 0)
+
+        done()
+      })
     })
   })
 
@@ -198,43 +143,43 @@ describe('POST /files', () => {
 
 describe('GET /files', () => {
   it('Get many files', (done) => {
-    request
-      .get(path)
-      .expect(200)
-      .expect('Content-Type', /json/)
-      .end((err, res) => {
-        if (err) return done(err)
-        assert.ok(res.body.length > 1)
+    service?.list()
+      .then((value) => {
+        const files = Array.isArray(value) ? value : [value]
+
+        assert.ok(files.length > 0)
+
         done()
       })
+      .catch((err) => done(err))
   })
 })
 
 describe('DELETE /files', () => {
   describe('when deleting a file is successful', () => {
     it('Remove file', (done) => {
-      const url = `${path}?id=one.jpg`
-      request
-        .delete(url)
-        .expect(200)
-        .expect('Content-Type', /json/)
-        .end((err, res) => {
-          if (err) return done(err)
-
-          assert.ok(typeof res.body === 'object')
-          assert.ok(res.body.name === 'one.jpg')
+      service?.remove('one.jpg')
+        .then((file) => {
+          assert.ok(typeof file === 'object')
+          assert.ok(file.name === 'one.jpg')
 
           done()
         })
+        .catch((err) => done(err))
     })
   })
 
   describe('when deleting a file is failure', () => {
     it('Remove file when not exist', (done) => {
-      request
-        .delete(path)
-        .expect(404)
-        .expect(/NotFoundError: The file not exist/, done)
+      service?.remove('random')
+        .catch((error) => {
+          const { statusCode, message } = error
+
+          assert.ok(statusCode === 404)
+          assert.ok(message === 'The file not exist')
+
+          done()
+        })
     })
   })
 })

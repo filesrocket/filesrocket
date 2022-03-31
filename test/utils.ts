@@ -1,8 +1,8 @@
 import FormData from 'form-data'
 import stream from 'stream'
 
-import filesrocket from './config'
 import { UploadOptions } from '../src/declarations'
+import filesrocket from './config'
 
 type CallbackFunction = (err?: any, results?: any) => void
 
