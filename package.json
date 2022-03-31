@@ -1,7 +1,7 @@
 {
   "name": "filesrocket",
   "version": "0.1.1",
-  "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service either Local, Clousinary, Amazon S3 and others.",
+  "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service (Local, Cloudinary, Amazon S3)",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
@@ -20,6 +20,9 @@
   "author": {
     "name": "Ivan Zaldivar",
     "url": "https://github.com/thebug404"
+  },
+  "bugs": {
+    "url": "https://github.com/Filesrocket/filesrocket/issues"
   },
   "license": "MIT",
   "dependencies": {
