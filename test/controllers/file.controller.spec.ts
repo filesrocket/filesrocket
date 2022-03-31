@@ -1,10 +1,13 @@
 import supertest from 'supertest'
+import FormData from 'form-data'
 import { resolve } from 'path'
 import express from 'express'
 import assert from 'assert'
+// import fs from 'fs'
 
 import { FileService } from '../services/file.service'
 import { Filesrocket } from '../../src/index'
+import { submit } from '../utils'
 
 const filesrocket = new Filesrocket()
 
@@ -19,7 +22,12 @@ const app = express()
 app.post(path, async (req, res, next) => {
   try {
     const files = await service?.create(req, {
-      extnames: ['.png']
+      extnames: ['.png'],
+      limits: {
+        files: 1,
+        fields: 1,
+        parts: 3
+      }
     })
 
     res.status(200).json(files)
@@ -97,6 +105,35 @@ describe('POST /files', () => {
 
         done()
       })
+  })
+
+  it('When you exceed the number of fields', () => {
+    const formdata = new FormData()
+
+    formdata.append('one', 'one')
+    formdata.append('two', 'two')
+    formdata.append('three', 'three')
+
+    if (!service) return
+
+    const middleware = (params: any) => {
+      return (req: any) => {
+        return service.create(req, params)
+      }
+    }
+
+    const func = middleware({
+      limits: {
+        fields: 1
+      }
+    })
+
+    submit(func, formdata, (err, files) => {
+      const { statusCode, message } = err
+
+      assert.ok(statusCode === 509)
+      assert.ok(message === 'FIELDS_LIMIT_EXCEEDED')
+    })
   })
 })
 
