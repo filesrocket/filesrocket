@@ -183,9 +183,9 @@ Currently there are **3 services**, but this is only the tip of the iceberg, lat
  
 | Service | Description |
 | ------- | ----------- |
-| [filesrocket-local](https://github.com/IvanZM123/filesrocket-local) | Manage your files and directories on your own server. |
-| [filesrocket-cloudinary](https://github.com/IvanZM123/filesrocket-cloudinary) | Manage your files and directories with [Cloudinary](https://cloudinary.com/documentation/node_integration) service. |
-| [filesrocket-s3](https://github.com/IvanZM123/filesrocket-s3) | Manage your file with [Amazon S3](https://aws.amazon.com/s3) service. |
+| [filesrocket-local](https://github.com/Filesrocket/filesrocket-local) | Manage your files and directories on your own server. |
+| [filesrocket-cloudinary](https://github.com/Filesrocket/filesrocket-cloudinary) | Manage your files and directories with [Cloudinary](https://cloudinary.com/documentation/node_integration) service. |
+| [filesrocket-amazons3](https://github.com/Filesrocket/filesrocket-amazons3) | Manage your file with [Amazon S3](https://aws.amazon.com/s3) service. |
  
 ### Creating my first service
  
@@ -249,4 +249,4 @@ We have also created many repositories with the most popular frameworks for you 
  
 | Framework | Repository |
 | --------- | ---------- |
-| Express | [filesrocket-express-app](https://github.com/IvanZM123/filesrocket-express-app) |
+| Express | [filesrocket-express-app](https://github.com/Filesrocket/filesrocket-express-app) |
