@@ -42,7 +42,7 @@ export interface Paginated<T> {
   prevPageToken?: string | number;
 }
 
-export interface InputFile {
+export interface InputEntity {
   name: string;
   /**
    * Represent a Readable of Node.js. For more information visit:
@@ -107,7 +107,7 @@ export interface UploadOptions {
   extnames: string[];
 }
 
-export interface ServiceMethods<T = Partial<InputFile>> {
+export interface ServiceMethods<T = Partial<InputEntity>> {
   /**
    * Create a new entity.
    * @param data Data.

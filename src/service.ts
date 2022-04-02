@@ -1,5 +1,5 @@
 import { FileController } from './controllers/file.controller'
-import { InputFile, ServiceMethods } from './index'
+import { InputEntity, ServiceMethods } from './index'
 
 interface Rocket {
   name: string;
@@ -24,7 +24,7 @@ export class Filesrocket {
    * Method responsible for returning a service
    * @param name Service name
    */
-  service (name: string): Partial<ServiceMethods<InputFile>> | undefined {
+  service (name: string): Partial<ServiceMethods<InputEntity>> | undefined {
     const data = this.entities.get(name)
 
     if (!data) return
@@ -44,6 +44,9 @@ export class Filesrocket {
     return data.controller
   }
 
+  /**
+   * List of all registered services
+   */
   get services (): Rocket[] {
     return [...this.entities].map((entity) => entity[1])
   }

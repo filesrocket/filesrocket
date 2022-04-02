@@ -1,14 +1,14 @@
-import { InputFile } from '../../src/index'
+import { InputEntity } from '../../src/index'
 import { NotFound } from 'http-errors'
 
 export class FileService {
-  items: Partial<InputFile>[] = [
+  items: Partial<InputEntity>[] = [
     { name: 'one.jpg' },
     { name: 'two.jpg' },
     { name: 'three.jpg' }
   ]
 
-  async create (data: InputFile, options: Record<string, unknown>): Promise<any> {
+  async create (data: InputEntity, options: Record<string, unknown>): Promise<any> {
     this.items.push(data)
 
     data.stream.resume()

@@ -6,7 +6,7 @@ import {
   ServiceMethods,
   UploadOptions,
   OutputEntity,
-  InputFile,
+  InputEntity,
   Query
 } from '../declarations'
 import { NotImplemented, BadRequest, BandwidthLimitExceeded } from '../errors'
@@ -55,7 +55,7 @@ export class FileController extends BaseController {
         }
       }
 
-      const saveFile = async (payload: InputFile) => {
+      const saveFile = async (payload: InputEntity) => {
         if (typeof this.service.create !== 'function') {
           return reject(new NotImplemented('Method not implemented'))
         }
@@ -89,7 +89,7 @@ export class FileController extends BaseController {
       bb.on('file', async (fieldname, stream, { filename, encoding, mimeType }) => {
         if (!filename) return stream.resume()
 
-        const payload: InputFile = {
+        const payload: InputEntity = {
           fieldname,
           name: generateRandomFilename(filename),
           stream,
