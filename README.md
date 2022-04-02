@@ -5,15 +5,15 @@
  
 > ⚠️ **Filesrocket** it is currently in **beta** phase. Note that it is not ready for production yet. Thanks for your understanding! ❤️
 
-## Features
+## 🌈 Features
 
 - 🚀 Single API for all file service (Cloudinary, Amazon S3, Local)
-- 🎉 Compatible with all frameworks (Express.js, Feathers.js)
 - ✅ Validations (validate extensions, file sizes and more)
+- ⚡ Easy to configure and integrate
 - 🛡️ Written in Typescript
 - 👨🏻‍💻 Community driven
  
-## Tutorial
+## 📖 Tutorial
 
 Create a project
  
@@ -126,7 +126,7 @@ To be able to interact with the files we access to the following endpoint.
  
 With this simple example we are ready to interact with the files.
 
-## Filesrocket
+## 🚀 Filesrocket
  
 Filesrocket is a class that is in charge of orchestrating all the available functionalities; like registering services, getting them, forming controllers, etc.
 
@@ -142,7 +142,7 @@ filesrocket.register("service-name", new MyService({...}))
  
 ### Recovering a service
  
-To obtain a service, you do it in the following way.
+To obtain a service, you do it in the following way. For more information about [Services](#services)
  
 ```ts
 const service = filesrocket.service("service-name")
@@ -153,17 +153,10 @@ service.list()
 
 service.remove()
 ```
-
-> **Note**: When you interact directly with the service, you have to parse the entire request, generate unique filenames.
  
 ### Recovering a controller
 
-The controllers are a step prior to communication with the service, this is so, since they are responsible for passing the requests.
-
-**Features**
-
-- When you upload a file, it takes care of passing requests, validating file extensions, limiting the number of fields, files, etc.
-- Every time you upload a file, a unique file name is generated, this in order not to cause conflicts. For example: `one.jpg -> one-xakbsfak.jpg` **Note**: To generate unique filenames, use [uniqid](https://github.com/adamhalasz/uniqid)
+To obtain a controller, you do it in the following way. For more information about [Controller](#controller)
  
 ```ts
 const controller = filesrocket.controller("service-name")
@@ -175,7 +168,7 @@ controller.list()
 controller.remove()
 ```
  
-## Services <a name="services"></a>
+## 🛎️ Services <a name="services"></a>
 
 A service is a predefined class that allows you to manage an entity either files.
  
@@ -237,13 +230,23 @@ Use via service
 const service = filesrocket.service("my-service")
 ```
 
+> **Note**: When you interact directly with the service, you have to parse the entire request, generate unique filenames.
+
 Use via controller
 
 ```ts
 const controller = filesrocket.controller("my-service")
 ```
 
-## Examples
+## 🚩 Controller <a name="controller"></a>
+
+A controller in [Filesrocket](https://github.com/Filesrocket/filesrocket) is a class that is in charge of parsing the requests before invoking the [service](#services). It basically works as an intermediary point for requests. Its responsibilities are the following:
+
+- Interpret `multipart/form-data` requests. **Note**: Available when a file is **created/uploaded**
+- Validate extensions, sizes, file numbers and other properties. For more information clic [here](https://github.com/mscdex/busboy#api)
+- Generate unique filenames. For example: `one.jpg -> one-xakbsfak.jpg` **Note**: To generate unique filenames, use [uniqid](https://github.com/adamhalasz/uniqid#readme)
+
+## 👀 Examples
 
 We have also created many repositories with the most popular frameworks for you to play around with, to help as example guides.
  
