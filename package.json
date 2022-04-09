@@ -1,11 +1,11 @@
 {
   "name": "filesrocket",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service (Local, Cloudinary, Amazon S3)",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
-    "build": "npm run test && npm run lint && tsc -p .",
+    "build": "npm run lint && npm run test && tsc -p .",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint --fix . --ext .ts",
     "test": "mocha -r ts-node/register test/**/*.spec.ts"

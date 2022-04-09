@@ -13,6 +13,22 @@ export interface Pagination {
   max: number;
 }
 
+export interface Params extends Query {
+  /**
+   * Specifies the directory where you want to get the entities.
+   */
+  path: string;
+  /**
+   * Specifies the number of entities to get.
+   */
+  size: number;
+  /**
+   * This property is useful when paginating the results, it
+   * specifies the next page of results.
+   */
+  page: string | number;
+}
+
 export interface Paginated<T> {
   /**
    * Represents a list of entities.
@@ -115,10 +131,16 @@ export interface ServiceMethods<T = Partial<InputEntity>> {
    */
   create(data: T, query?: Query): Promise<OutputEntity>;
   /**
-   * Gets a list of entities.
+   * Get a list of entities.
    * @param query Query.
    */
   list(query?: Query): Promise<Paginated<OutputEntity> | OutputEntity[]>;
+  /**
+   * Get an entity.
+   * @param id Identifier.
+   * @param query Query.
+   */
+  get(id: string, query?: Query): Promise<OutputEntity>;
   /**
    * Remove a entity.
    * @param id Identifier.
@@ -126,9 +148,3 @@ export interface ServiceMethods<T = Partial<InputEntity>> {
    */
   remove(id: string, query?: Query): Promise<OutputEntity>;
 }
-
-export interface FileManager {
-  file: ServiceMethods;
-}
-
-export interface Service<T> extends ServiceMethods<T> {}

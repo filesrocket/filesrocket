@@ -1,7 +1,8 @@
-import { InputEntity } from '../../src/index'
 import { NotFound } from 'http-errors'
 
-export class FileService {
+import { InputEntity, OutputEntity, Query, ServiceMethods } from '../../src/index'
+
+export class FileService implements ServiceMethods {
   items: Partial<InputEntity>[] = [
     { name: 'one.jpg' },
     { name: 'two.jpg' },
@@ -20,12 +21,20 @@ export class FileService {
     return this.items
   }
 
+  async get (id: string, query?: Query): Promise<OutputEntity> {
+    const entity = this.items.find(
+      (item) => item.name === id
+    )
+
+    if (!entity) throw new NotFound('File does not exist')
+
+    return entity as any
+  }
+
   async remove (id: string, query: Record<string, unknown>): Promise<any> {
-    const index = this.items.findIndex((item) => item.name === id)
+    const entity = await this.get(id, query)
 
-    if (index < 0) throw new NotFound('The file not exist')
-
-    const entity = this.items.at(index)
+    const index = this.items.indexOf(entity)
 
     this.items.splice(index, 1)
 

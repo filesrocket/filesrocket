@@ -15,7 +15,7 @@ import { generateRandomFilename } from '../utils'
 import { Counter } from '../helpers/counter'
 
 interface Params extends UploadOptions {
-  query: { path: string } & Query;
+  query: { path?: string } & Query;
 }
 
 export class FileController extends BaseController {
@@ -57,7 +57,7 @@ export class FileController extends BaseController {
 
       const saveFile = async (payload: InputEntity) => {
         if (typeof this.service.create !== 'function') {
-          return reject(new NotImplemented('Method not implemented'))
+          return reject(new NotImplemented('Method has not been implemented'))
         }
 
         const file = await this.service.create(payload, params.query)
@@ -86,6 +86,7 @@ export class FileController extends BaseController {
         req.body = Object.assign(req.body, { [fieldname]: value })
       })
 
+      // Manage files
       bb.on('file', async (fieldname, stream, { filename, encoding, mimeType }) => {
         if (!filename) return stream.resume()
 

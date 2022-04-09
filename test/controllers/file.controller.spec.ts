@@ -153,33 +153,52 @@ describe('GET /files', () => {
       })
       .catch((err) => done(err))
   })
+
+  it('Get one file', (done) => {
+    service?.get('one.jpg')
+      .then((entity) => {
+        assert.ok(typeof entity !== 'undefined')
+        assert.ok(entity.name === 'one.jpg')
+
+        done()
+      })
+      .catch((err) => done(err))
+  })
+
+  it('Get file does not exist', (done) => {
+    service?.get('random.png')
+      .catch((err) => {
+        const { statusCode, message } = err
+
+        assert.ok(statusCode === 404)
+        assert.ok(message === 'File does not exist')
+
+        done()
+      })
+  })
 })
 
 describe('DELETE /files', () => {
-  describe('when deleting a file is successful', () => {
-    it('Remove file', (done) => {
-      service?.remove('one.jpg')
-        .then((file) => {
-          assert.ok(typeof file === 'object')
-          assert.ok(file.name === 'one.jpg')
+  it('Remove file', (done) => {
+    service?.remove('one.jpg')
+      .then((file) => {
+        assert.ok(typeof file === 'object')
+        assert.ok(file.name === 'one.jpg')
 
-          done()
-        })
-        .catch((err) => done(err))
-    })
+        done()
+      })
+      .catch((err) => done(err))
   })
 
-  describe('when deleting a file is failure', () => {
-    it('Remove file when not exist', (done) => {
-      service?.remove('random')
-        .catch((error) => {
-          const { statusCode, message } = error
+  it('Remove file when not exist', (done) => {
+    service?.remove('random')
+      .catch((error) => {
+        const { statusCode, message } = error
 
-          assert.ok(statusCode === 404)
-          assert.ok(message === 'The file not exist')
+        assert.ok(statusCode === 404)
+        assert.ok(message === 'File does not exist')
 
-          done()
-        })
-    })
+        done()
+      })
   })
 })
