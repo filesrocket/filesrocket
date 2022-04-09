@@ -1,6 +1,6 @@
 {
   "name": "filesrocket",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service (Local, Cloudinary, Amazon S3)",
   "main": "lib/index.js",
   "types": "lib",
@@ -24,6 +24,14 @@
   "bugs": {
     "url": "https://github.com/Filesrocket/filesrocket/issues"
   },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "lib/**",
+    "README.md",
+    "LICENCE"
+  ],
   "license": "MIT",
   "dependencies": {
     "busboy": "1.5.0",
