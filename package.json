@@ -1,6 +1,6 @@
 {
   "name": "filesrocket",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Filesrocket is a Node.js package that takes care of the file management of any cloud storage service (Local, Cloudinary, Amazon S3)",
   "main": "lib/index.js",
   "types": "lib",
