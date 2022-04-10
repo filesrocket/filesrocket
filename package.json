@@ -21,6 +21,9 @@
   "directories": {
     "lib": "lib"
   },
+  "repository": {
+    "url": "https://github.com/Filesrocket/filesrocket"
+  },
   "files": [
     "lib/**",
     "README.md",
@@ -34,8 +37,7 @@
     "release": "standard-version",
     "release:minor": "npm run release -- --release-as minor",
     "release:major": "npm run release -- --release-as major",
-    "prepublishOnly": "npm run build",
-    "publish": "git push --follow-tags origin master"
+    "prepublishOnly": "npm run build"
   },
   "license": "MIT",
   "dependencies": {
