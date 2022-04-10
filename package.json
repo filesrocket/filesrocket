@@ -1,15 +1,9 @@
 {
   "name": "filesrocket",
   "version": "0.0.6",
-  "description": "FilesRocket is a Node.js package that takes care of the file management of any cloud service (Local, Cloudinary, Amazon S3)",
+  "description": "Filesrocket is a Node.js package that takes care of the file management of any cloud storage service (Local, Cloudinary, Amazon S3)",
   "main": "lib/index.js",
   "types": "lib",
-  "scripts": {
-    "build": "npm run lint && npm run test && tsc -p .",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts"
-  },
   "keywords": [
     "filemanager",
     "filemanagement",
@@ -32,6 +26,17 @@
     "README.md",
     "LICENCE"
   ],
+  "scripts": {
+    "build": "npm run lint && npm run test && tsc -p .",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "release": "standard-version",
+    "release:minor": "npm run release -- --release-as minor",
+    "release:major": "npm run release -- --release-as major",
+    "prepublishOnly": "npm run build",
+    "publish": "git push --follow-tags origin master"
+  },
   "license": "MIT",
   "dependencies": {
     "busboy": "1.5.0",
@@ -56,6 +61,7 @@
     "eslint-plugin-promise": "^5.2.0",
     "form-data": "^4.0.0",
     "mocha": "^9.1.4",
+    "standard-version": "^9.3.2",
     "supertest": "^6.2.2",
     "ts-node": "^10.3.0",
     "typescript": "^4.4.4"
