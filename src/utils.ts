@@ -11,32 +11,15 @@ export function generateRandomFilename (filename: string): string {
   return `${uniquename}${ext}`
 }
 
-export type FunctionPredicate<T, K> = (
-  entity: T,
-  value: any,
-  key: K
-) => Boolean;
-
-function transform<T, K extends keyof T> (
-  obj: T,
-  predicate: FunctionPredicate<T, K>
-) {
-  return Object.keys(obj).reduce((prev, curr) => {
-    const key = curr as K
-    const memo = prev as T
-
-    if (predicate(obj, obj[key], key)) {
-      memo[key] = obj[key]
-    }
-
-    return memo
-  }, {})
-}
-
 /**
- * Omit properties.
- * @param obj Entity.
- * @param items Properties.
+ * Remove properties from an object.
+ * @param payload Payload.
+ * @param keys List of properties to omit.
  */
-export const omitProps = <T, K extends keyof T>(obj: T, items: K[]): Partial<T> =>
-  transform(obj, (entity, value, key) => !items.includes(key as K))
+export function omitProps<T, K extends keyof T> (payload: T, keys: K[]): Omit<T, K> {
+  const items = Object.keys(payload)
+    .filter((key) => !keys.includes(key as K))
+    .map((key) => ({ [key]: payload[key as K] }))
+
+  return Object.assign({}, ...items)
+}

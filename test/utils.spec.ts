@@ -13,7 +13,7 @@ interface User {
   twitter: string;
 }
 
-describe('Random filename', () => {
+describe('Utilities', () => {
   it('Generate filename', () => {
     const FILENAME: string = 'filesrocket.png'
     const filename: string = generateRandomFilename(FILENAME)
@@ -21,9 +21,7 @@ describe('Random filename', () => {
     assert.ok(filename !== FILENAME)
     assert.ok(filename.split('-')[0] === FILENAME.replace('.png', ''))
   })
-})
 
-describe('Properties', () => {
   it('Remove properties of an object', () => {
     const user: User = {
       fullname: 'Ivan Zaldivar',
@@ -34,7 +32,7 @@ describe('Properties', () => {
       twitter: 'https://twitter.com/IvanZM123'
     }
 
-    const newUser: Partial<User> = omitProps(user, ['country', 'sex'])
+    const newUser = omitProps(user, ['country', 'sex'])
     assert.notEqual(user, newUser)
   })
 })
