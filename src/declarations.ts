@@ -1,3 +1,5 @@
+import { BusboyConfig } from 'busboy'
+
 export type Query = Record<string, any>
 
 export interface Pagination {
@@ -106,20 +108,10 @@ export interface OutputEntity extends Query {
   updatedAt: Date;
 }
 
-export interface UploadOptions {
-  highWaterMark: number | undefined;
-  fileHwm: number | undefined;
-  defCharset: string | undefined;
-  preservePath: boolean | undefined;
-  limits: {
-    fieldNameSize?: number | undefined;
-    fieldSize?: number | undefined;
-    fields?: number | undefined;
-    fileSize?: number | undefined;
-    files?: number | undefined;
-    parts?: number | undefined;
-    headerPairs?: number | undefined;
-  } | undefined;
+export interface UploadOptions extends BusboyConfig {
+  /**
+   * List of allowed file extensions.
+   */
   extnames: string[];
 }
 

@@ -8,7 +8,7 @@ interface Rocket {
 }
 
 export class Filesrocket {
-  private entities: Map<string, Rocket> = new Map();
+  private entities: Map<string, Rocket> = new Map()
 
   /**
    * Register a new service
