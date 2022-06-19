@@ -49,18 +49,19 @@ export interface Paginated<T> {
    */
   page: string | number | undefined;
   /**
-   * Represents if there are more pages to display, keep in mind
-   * that this property will only be present when there are more
-   * entities to return.
+   * URL to get the following results.
    */
-  nextPageToken?: string | number;
+  nextPage: string | number | null;
   /**
-   * Represents the previous page.
+   * URL to get previous results.
    */
-  prevPageToken?: string | number;
+  prevPage: string | number | null;
 }
 
 export interface InputEntity {
+  /**
+   * File name (including extension)
+   */
   name: string;
   /**
    * Represent a Readable of Node.js. For more information visit:
@@ -68,8 +69,15 @@ export interface InputEntity {
    */
   // eslint-disable-next-line no-undef
   stream: NodeJS.ReadableStream;
+  /**
+   * Form field name.
+   */
   fieldname: string;
   encoding: string;
+  /**
+   * Specifies the type of data such as text, image, audio, etc.
+   * which files contain.
+   */
   mimetype: string;
 }
 
@@ -101,16 +109,17 @@ export interface OutputEntity extends Query {
   /**
    * Date of creation of the entity.
    */
-  createdAt: Date;
+  createdAt: Date | null;
   /**
    * Date of last update of the entity.
    */
-  updatedAt: Date;
+  updatedAt: Date | null;
 }
 
 export interface UploadOptions extends BusboyConfig {
   /**
    * List of allowed file extensions.
+   * For example: `.jpg .png .mp4`
    */
   extnames: string[];
 }

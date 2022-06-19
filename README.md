@@ -300,8 +300,8 @@ All official services will return paginated data.
   "total": 0,
   "size": 0,
   "page": 1,
-  "nextPageToken": 2,
-  "prevPageToken": undefined
+  "next": "http://domain.com/files/?page=2",
+  "prev": undefined
 }
 ```
 
