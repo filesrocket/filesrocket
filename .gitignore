@@ -1,4 +1,8 @@
+# Dependencies.
+node_modules
+
 # Directories.
-/node_modules
-/lib
-/uploads
+uploads
+
+# Typescript compiled.
+packages/**/lib
