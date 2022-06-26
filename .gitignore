@@ -4,5 +4,8 @@ node_modules
 # Directories.
 uploads
 
+# Environments
+packages/**/.env
+
 # Typescript compiled.
 packages/**/lib
