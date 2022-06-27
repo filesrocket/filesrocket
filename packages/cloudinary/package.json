@@ -1,0 +1,46 @@
+{
+  "name": "@filesrocket/cloudinary",
+  "version": "0.0.0",
+  "description": "Filesrocket service that manage the files of the Cloudinary",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "npm run lint && npm run test && tsc -p .",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint --fix . --ext .ts",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "release": "standard-version",
+    "release:minor": "npm run release -- --release-as minor",
+    "release:major": "npm run release -- --release-as major",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cloudinary",
+    "filesmanagement",
+    "uploads",
+    "files"
+  ],
+  "author": {
+    "name": "Ivan Zaldivar",
+    "url": "https://github.com/thebug404"
+  },
+  "repository": {
+    "url": "https://github.com/Filesrocket/filesrocket-cloudinary"
+  },
+  "bugs": {
+    "url": "https://github.com/Filesrocket/filesrocket-cloudinary/issues"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "LICENCE",
+    "README.md",
+    "lib/**"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "cloudinary": "^1.29.0"
+  },
+  "devDependencies": {}
+}
