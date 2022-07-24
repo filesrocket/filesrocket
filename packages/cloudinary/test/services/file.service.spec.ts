@@ -67,7 +67,7 @@ describe('File Service with Cloduinary', () => {
   })
 
   it('Remove file', async () => {
-    const data = await service.list()
+    const data = await service.list({ path: FOLDER_CLOUDINARY })
 
     const files = await Promise.all(
       data.items.map((item) => service.remove(item.id))
