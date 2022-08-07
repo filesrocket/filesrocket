@@ -4,6 +4,8 @@
 
 **Filesrocket** is an package of **Node.js** that allows you to manage your files with any cloud storage service ([**Local**](https://github.com/Filesrocket/filesrocket-local), [**Cloudinary**](https://github.com/Filesrocket/filesrocket-cloudinary), [**Amazon S3**](https://github.com/Filesrocket/filesrocket-amazons3)) through the use of strategies called **Services**
 
+Hi developers
+
 > ⚠️ **Filesrocket** it is currently in **beta** phase. Note that it is not ready for production yet. Thanks for your understanding! ❤️
   
 ## 🚀 Getting started
