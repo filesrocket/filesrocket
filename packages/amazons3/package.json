@@ -1,6 +1,6 @@
 {
   "name": "@filesrocket/amazons3",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Filerocket service to manage files from Amazon Storage S3",
   "main": "lib/index.js",
   "types": "lib",
@@ -42,8 +42,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "aws-sdk": "2.1012.0",
-    "@filesrocket/core": "*"
+    "@filesrocket/core": "^1.0.0",
+    "aws-sdk": "2.1012.0"
   },
   "devDependencies": {
     "dotenv": "^10.0.0"
