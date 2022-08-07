@@ -40,7 +40,8 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "cloudinary": "^1.29.0"
+    "cloudinary": "^1.29.0",
+    "@filesrocket/core": "*"
   },
   "devDependencies": {}
 }

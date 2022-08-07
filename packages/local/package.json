@@ -40,6 +40,8 @@
     "release:major": "npm run release -- --release-as major",
     "prepublishOnly": "npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@filesrocket/core": "*"
+  },
   "devDependencies": {}
 }

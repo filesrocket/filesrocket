@@ -42,7 +42,8 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "aws-sdk": "2.1012.0"
+    "aws-sdk": "2.1012.0",
+    "@filesrocket/core": "*"
   },
   "devDependencies": {
     "dotenv": "^10.0.0"
