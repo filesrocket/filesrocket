@@ -1,2 +1,2 @@
-export { FileService as LocalFileService } from './services/file.service'
+export { Service } from './service'
 export * from './declarations'

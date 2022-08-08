@@ -4,11 +4,11 @@ import { promisify } from 'util'
 import assert from 'assert'
 import path from 'path'
 
-import { FileService } from '../../src/services/file.service'
+import { Service } from '../src/index'
 
 const readdirAsync = promisify(readdir)
 
-const service = new FileService({
+const service = new Service({
   pagination: { default: 15, max: 50 },
   directory: 'uploads',
   host: 'http://localhost:3030'
@@ -16,7 +16,7 @@ const service = new FileService({
 
 describe('File Service', () => {
   it('Create files', async () => {
-    const dir = path.resolve(__dirname, '../fixtures')
+    const dir = path.resolve(__dirname, './fixtures')
 
     const items = await readdirAsync(dir)
 
@@ -51,7 +51,7 @@ describe('File Service', () => {
   it('Get file', async () => {
     const fullpath = path.resolve(
       __dirname,
-      '../../uploads',
+      '../uploads',
       'rocket-1.png'
     )
 

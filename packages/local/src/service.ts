@@ -10,15 +10,15 @@ import { NotFound } from 'http-errors'
 import { promisify } from 'util'
 import path from 'path'
 
-import { DirectoryService } from './directory.service'
-import { BaseService } from './base.service'
-import { paginate } from '../helpers'
-import { Options } from '../index'
+import { DirectoryService } from './services/directory.service'
+import { BaseService } from './services/base.service'
+import { Options } from './declarations'
+import { paginate } from './helpers'
 
 const readdirAsync = promisify(readdir)
 const unlinkAsync = promisify(unlink)
 
-export class FileService extends BaseService implements Partial<ServiceMethods> {
+export class Service extends BaseService implements Partial<ServiceMethods> {
   protected directoryService: DirectoryService
 
   constructor (protected readonly options: Options) {

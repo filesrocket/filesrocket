@@ -23,6 +23,7 @@
     "LICENCE"
   ],
   "keywords": [
+    "filesrocket",
     "filemanager",
     "filemanagement",
     "upload",
@@ -41,6 +42,6 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@filesrocket/core": "^1.0.1"
+    "@filesrocket/core": "*"
   }
 }
