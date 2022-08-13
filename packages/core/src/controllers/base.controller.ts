@@ -5,7 +5,7 @@ import {
   Params,
   Query
 } from '../declarations'
-import { NotImplemented } from '../errors'
+import { NotImplemented } from 'http-errors'
 
 type GetParams = Pick<Params, 'path'> & Query;
 

@@ -48,12 +48,9 @@
   "devDependencies": {
     "@types/busboy": "^1.5.0",
     "@types/express": "^4.17.13",
-    "@types/node": "^18.0.0",
     "@types/supertest": "^2.0.12",
     "@types/uniqid": "^5.3.2",
     "form-data": "^4.0.0",
-    "mocha": "^10.0.0",
-    "standard-version": "^9.5.0",
     "supertest": "^6.2.3"
   }
 }

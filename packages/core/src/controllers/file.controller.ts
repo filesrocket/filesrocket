@@ -9,7 +9,7 @@ import {
   InputEntity,
   Query
 } from '../declarations'
-import { NotImplemented, BadRequest, BandwidthLimitExceeded } from '../errors'
+import { NotImplemented, BadRequest, BandwidthLimitExceeded } from 'http-errors'
 import { BaseController } from './base.controller'
 import { generateRandomFilename } from '../utils'
 import { Counter } from '../helpers/counter'
