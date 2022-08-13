@@ -1,23 +1,21 @@
 ![Filesrocket](https://user-images.githubusercontent.com/64434514/148323581-1afc535f-fb2b-4e81-808a-19afe5b4c7c9.png)
 
-# Manage your Files with any Cloud Storage Services
+# Manage your files with any Cloud Storage Services
 
 **Filesrocket** is an package of **Node.js** that allows you to manage your files with any cloud storage service ([**Local**](https://github.com/Filesrocket/filesrocket-local), [**Cloudinary**](https://github.com/Filesrocket/filesrocket-cloudinary), [**Amazon S3**](https://github.com/Filesrocket/filesrocket-amazons3)) through the use of strategies called **Services**
-
-Hi developers
 
 > ⚠️ **Filesrocket** it is currently in **beta** phase. Note that it is not ready for production yet. Thanks for your understanding! ❤️
   
 ## 🚀 Getting started
 
-You can start using Filesrocket in easy steps.
+You can start using **Filesrocket** in easy steps.
 
 ```bash
-mkdir filesrocket-example
-cd filesrocket-example
-npm init -y && tsc --init
-npm install express @filesrocket/core @filesrocket/local
-npm install @types/express typescript ts-node
+$ mkdir filesrocket-example
+$ cd filesrocket-example
+$ npm init -y && tsc --init
+$ npm install express @filesrocket/core @filesrocket/local
+$ npm install @types/express typescript ts-node -D
 ```
 
 Create `src/index.ts` and copy following content.
@@ -38,13 +36,13 @@ app.listen(3030, ()  => {
 
 ```ts
 import { Filesrocket } from "@filesrocket/core";
-import { LocalFileService } from "@filesrocket/local";
+import { Service } from "@filesrocket/local";
 
 // Initialize
 const filesrocket = new Filesrocket();
 
 // Config your service
-const service = new LocalFileService({
+const service = new Service({
   pagination: { default: 15, max: 50 },
   host: "http://localhost:3030",
   directory: "uploads"
@@ -109,7 +107,6 @@ The [Filesrocket docs]() are packed with awesome stuff and tell you everything y
 ## ❤️ Stay in touch
 
 - 🐦 Twitter: [thebug404](https://twitter.com/thebug404)
-- 📷 Youtube: [thebug](https://www.youtube.com/channel/UCHmWusp8DFxj9NR_QxRw6HA)
 - 📰 Blog: [thebug404](https://thebug.hashnode.dev)
 
 ## ⚖️ Licence
