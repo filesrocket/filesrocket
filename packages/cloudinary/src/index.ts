@@ -1,2 +1,2 @@
-export { FileService as CloudinaryFileService } from './services/file.service'
+export { Service } from './service'
 export * from './declarations'

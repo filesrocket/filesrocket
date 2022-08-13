@@ -18,7 +18,8 @@
     "cloudinary",
     "filesmanagement",
     "uploads",
-    "files"
+    "files",
+    "filesrocket"
   ],
   "author": {
     "name": "Ivan Zaldivar",
@@ -40,7 +41,7 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@filesrocket/core": "^1.0.1",
+    "@filesrocket/core": "*",
     "cloudinary": "^1.29.0"
   }
 }

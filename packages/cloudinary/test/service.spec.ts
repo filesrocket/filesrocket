@@ -4,13 +4,13 @@ import { promisify } from 'util'
 import assert from 'assert'
 import path from 'path'
 
-import { environments } from '../environments/environments'
+import { environments } from './environments/environments'
 
-import { FileService } from '../../src/services/file.service'
+import { Service } from '../src/service'
 
 const readdirAsync = promisify(readdir)
 
-const service = new FileService({
+const service = new Service({
   pagination: { default: 15, max: 50 },
   cloud_name: environments.CLOUD_NAME,
   api_key: environments.API_KEY,
@@ -21,7 +21,7 @@ const FOLDER_CLOUDINARY = 'filesrocket-test'
 
 describe('File Service with Cloduinary', () => {
   it('Upload files', async () => {
-    const dir = path.resolve(__dirname, '../fixtures')
+    const dir = path.resolve(__dirname, 'fixtures')
 
     const items = await readdirAsync(dir)
 
