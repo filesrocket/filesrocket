@@ -44,8 +44,5 @@
   "dependencies": {
     "@filesrocket/core": "*",
     "aws-sdk": "2.1012.0"
-  },
-  "devDependencies": {
-    "dotenv": "^10.0.0"
   }
 }
