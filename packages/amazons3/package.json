@@ -1,7 +1,7 @@
 {
   "name": "@filesrocket/amazons3",
   "version": "1.0.1",
-  "description": "Filerocket service to manage files from Amazon Storage S3",
+  "description": "Filerocket service to manage files from Amazon S3",
   "main": "lib/index.js",
   "types": "lib",
   "author": {
@@ -23,12 +23,12 @@
     "LICENCE"
   ],
   "keywords": [
-    "upload",
-    "upload-files",
     "s3",
     "aws",
+    "upload",
     "storage",
-    "filemanagement"
+    "filemanagement",
+    "filesrocket"
   ],
   "license": "MIT",
   "scripts": {
@@ -42,7 +42,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "@filesrocket/core": "^1.0.1",
+    "@filesrocket/core": "*",
     "aws-sdk": "2.1012.0"
   },
   "devDependencies": {

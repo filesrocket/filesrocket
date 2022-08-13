@@ -5,12 +5,12 @@ import path from 'path'
 
 import { environments } from './environments/environments'
 
-import { FileService } from '../src/services/file.service'
-import { InputEntity } from '@filesrocket/core/lib'
+import { InputEntity, OutputEntity } from '@filesrocket/core/lib'
+import { Service } from '../src/service'
 
 const readdirAsync = promisify(readdir)
 
-const service = new FileService({
+const service = new Service({
   Pagination: { default: 15, max: 50 },
   Bucket: environments.BUCKET as string,
   region: environments.REGION,
@@ -21,10 +21,6 @@ const service = new FileService({
 })
 
 describe('File Service of Amazon S3', () => {
-  it('2 + 2 equal 4', () => {
-    assert.equal(2 + 2, 4)
-  })
-
   it('Upload files', async () => {
     const dir = path.resolve(__dirname, 'fixtures')
 
@@ -63,11 +59,13 @@ describe('File Service of Amazon S3', () => {
   it('Get file', async () => {
     const data = await service.list({ size: 1 })
 
-    const file = data.items.at(0)
+    const file = data.items.at(0) as OutputEntity
 
     const entity = await service.get(file?.id as string)
 
-    assert.deepEqual(entity, file)
+    assert.equal(file.id, entity.id)
+    assert.equal(file.name, entity.name)
+    assert.equal(file.ext, entity.ext)
   })
 
   it('Remove file', async () => {

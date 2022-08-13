@@ -9,10 +9,10 @@ import { omitProps } from '@filesrocket/core/lib/utils'
 import { BadRequest, NotFound } from 'http-errors'
 import { ManagedUpload } from 'aws-sdk/clients/s3'
 
-import { AmazonConfig } from '../declarations'
-import { BaseAmazonRocket } from '../base'
+import { AmazonConfig } from './declarations'
+import { BaseAmazonRocket } from './base'
 
-export class FileService extends BaseAmazonRocket implements ServiceMethods {
+export class Service extends BaseAmazonRocket implements ServiceMethods {
   constructor (options: AmazonConfig) {
     super(options)
     this.createBucket(options.Bucket)
