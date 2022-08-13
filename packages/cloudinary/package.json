@@ -26,10 +26,10 @@
     "url": "https://github.com/thebug404"
   },
   "repository": {
-    "url": "https://github.com/Filesrocket/filesrocket-cloudinary"
+    "url": "https://github.com/Filesrocket/filesrocket"
   },
   "bugs": {
-    "url": "https://github.com/Filesrocket/filesrocket-cloudinary/issues"
+    "url": "https://github.com/Filesrocket/filesrocket/issues"
   },
   "directories": {
     "lib": "lib"
