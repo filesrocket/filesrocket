@@ -6,11 +6,11 @@ import path from 'path'
 import { environments } from './environments/environments'
 
 import { InputEntity, OutputEntity } from '@filesrocket/core/lib'
-import { Service } from '../src/service'
+import { AmazonS3Service } from '../src/service'
 
 const readdirAsync = promisify(readdir)
 
-const service = new Service({
+const service = new AmazonS3Service({
   Pagination: { default: 15, max: 50 },
   Bucket: environments.BUCKET as string,
   region: environments.REGION,

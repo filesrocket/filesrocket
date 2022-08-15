@@ -4,11 +4,11 @@ import { promisify } from 'util'
 import assert from 'assert'
 import path from 'path'
 
-import { Service } from '../src/index'
+import { LocalService } from '../src/index'
 
 const readdirAsync = promisify(readdir)
 
-const service = new Service({
+const service = new LocalService({
   pagination: { default: 15, max: 50 },
   directory: 'uploads',
   host: 'http://localhost:3030'

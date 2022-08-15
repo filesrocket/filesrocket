@@ -12,7 +12,7 @@ import { ManagedUpload } from 'aws-sdk/clients/s3'
 import { AmazonConfig } from './declarations'
 import { BaseAmazonRocket } from './base'
 
-export class Service extends BaseAmazonRocket implements ServiceMethods {
+export class AmazonS3Service extends BaseAmazonRocket implements ServiceMethods {
   constructor (options: AmazonConfig) {
     super(options)
     this.createBucket(options.Bucket)

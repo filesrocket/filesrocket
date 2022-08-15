@@ -13,7 +13,7 @@ import { convertToExpression, CustomFilename } from './utils'
 import { CloudinaryOptions, FileResults } from './index'
 import { BaseService } from './base'
 
-export class Service extends BaseService implements Partial<ServiceMethods> {
+export class CloudinaryService extends BaseService implements Partial<ServiceMethods> {
   constructor (private readonly options: CloudinaryOptions) {
     super()
     cloudinary.v2.config(options)

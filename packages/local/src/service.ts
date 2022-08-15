@@ -18,7 +18,7 @@ import { paginate } from './helpers'
 const readdirAsync = promisify(readdir)
 const unlinkAsync = promisify(unlink)
 
-export class Service extends BaseService implements Partial<ServiceMethods> {
+export class LocalService extends BaseService implements Partial<ServiceMethods> {
   protected directoryService: DirectoryService
 
   constructor (protected readonly options: Options) {

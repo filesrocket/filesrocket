@@ -1,2 +1,2 @@
-export { Service } from './service'
+export { LocalService } from './service'
 export * from './declarations'

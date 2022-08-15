@@ -1,2 +1,2 @@
-export { Service } from './service'
+export { AmazonS3Service } from './service'
 export * from './declarations'

@@ -6,11 +6,11 @@ import path from 'path'
 
 import { environments } from './environments/environments'
 
-import { Service } from '../src/service'
+import { CloudinaryService } from '../src/service'
 
 const readdirAsync = promisify(readdir)
 
-const service = new Service({
+const service = new CloudinaryService({
   pagination: { default: 15, max: 50 },
   cloud_name: environments.CLOUD_NAME,
   api_key: environments.API_KEY,
