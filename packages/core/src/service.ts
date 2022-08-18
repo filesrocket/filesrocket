@@ -8,7 +8,7 @@ interface Rocket {
 }
 
 export class Filesrocket {
-  private entities: Map<string, Rocket> = new Map()
+  private serviceMap: Map<string, Rocket> = new Map()
 
   /**
    * Register a new service
@@ -16,8 +16,13 @@ export class Filesrocket {
    * @param service ServiceMethods
    */
   register (name: string, service: Partial<ServiceMethods<any>>) {
+    if (this.serviceMap.get(name)) {
+      throw new Error(`The ${name} service already exists.`)
+    }
+
     const controller = new FileController(service)
-    this.entities.set(name, { name, service, controller })
+
+    this.serviceMap.set(name, { name, service, controller })
   }
 
   /**
@@ -25,7 +30,7 @@ export class Filesrocket {
    * @param name Service name
    */
   service (name: string): Partial<ServiceMethods<InputEntity>> | undefined {
-    const data = this.entities.get(name)
+    const data = this.serviceMap.get(name)
 
     if (!data) return
 
@@ -37,7 +42,7 @@ export class Filesrocket {
    * @param name Service name
    */
   controller (name: string): FileController | undefined {
-    const data = this.entities.get(name)
+    const data = this.serviceMap.get(name)
 
     if (!data) return
 
@@ -48,6 +53,6 @@ export class Filesrocket {
    * List of all registered services
    */
   get services (): Rocket[] {
-    return [...this.entities].map((entity) => entity[1])
+    return [...this.serviceMap].map((entity) => entity[1])
   }
 }

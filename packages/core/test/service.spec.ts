@@ -9,14 +9,20 @@ class OneService {}
 
 class TwoService {}
 
+class ThreeService {}
+
 filesrocket.register('serviceOne', new OneService())
 
 filesrocket.register('serviceTwo', new TwoService())
 
+filesrocket.register('serviceThree', new ThreeService())
+
 describe('Filesrocket service', () => {
-  it('Check the existence of services', () => {
-    assert.ok(filesrocket.services.length > 1)
-    assert.ok(filesrocket.services.length === 2)
+  it('Register a service that already exists', () => {
+    assert.throws(
+      () => filesrocket.register('serviceOne', new ThreeService()),
+      /The serviceOne service already exists./
+    )
   })
 
   it('Get a service', () => {
@@ -32,8 +38,7 @@ describe('Filesrocket service', () => {
   })
 
   it('Get a service list', () => {
-    const items = filesrocket.services
-    assert.ok(items.length === 2)
+    assert.ok(filesrocket.services.length > 1)
   })
 
   it('Get a service that does not exist', () => {
