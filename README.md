@@ -2,9 +2,11 @@
 
 # Manage your files with any Cloud Storage Services
 
-**Filesrocket** is an package of **Node.js** that allows you to manage your files with any cloud storage service ([**Local**](https://github.com/Filesrocket/filesrocket-local), [**Cloudinary**](https://github.com/Filesrocket/filesrocket-cloudinary), [**Amazon S3**](https://github.com/Filesrocket/filesrocket-amazons3)) through the use of strategies called **Services**
+[**Filesrocket**](https://filesrocket.com/) is an package of [Node.js](https://nodejs.org/en/) that allows you to manage your files with any cloud storage service ([Local](https://filesrocket.com/services/local.html), [Cloudinary](https://filesrocket.com/services/cloudinary.html), [Amazon S3](https://filesrocket.com/services/amazon-s3.html)) through the use of strategies called [Services](https://filesrocket.com/overview/services.html)
 
-> ⚠️ **Filesrocket** it is currently in **beta** phase. Note that it is not ready for production yet. Thanks for your understanding! ❤️
+## 📙 Documentation
+
+The [Filesrocket Docs](https://filesrocket.com/) are packed with awesome stuff and tell you everything you need to know about using and configuring Filesrocket.
   
 ## 🚀 Getting started
 
@@ -90,24 +92,19 @@ Expose static files.
 app.use("/uploads", express.static(path.resolve("uploads")));
 ```
 
-> **Note**: By default there is no type of filter when uploading a file. Later we will see how to add validations, limit file sizes, fields and more...
-
 We run the server
 
 ```bash
 npx ts-node src/index.ts
 ```
 
-With this simple example you can interact with the files, click on the following link: http://localhost:3030/files
-
-## 📙 Documentation
-
-The [Filesrocket docs]() are packed with awesome stuff and tell you everything you need to know about using and configuring Filesrocket.
+With this simple example you can interact with the files, click on the following link: [`http://localhost:3030/files`](http://localhost:3030/files)
 
 ## ❤️ Stay in touch
 
-- 🐦 Twitter: [thebug404](https://twitter.com/thebug404)
-- 📰 Blog: [thebug404](https://thebug.hashnode.dev)
+- 🐦 Twitter - [Ivan Zaldivar](https://twitter.com/thebug404)
+- 🌐 Website - [filesrocket.com](https://filesrocket.com/)
+- 📝 Blog - [thebug.hashnode.dev](https://thebug.hashnode.dev/)
 
 ## ⚖️ Licence
 
