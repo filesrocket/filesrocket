@@ -36,13 +36,13 @@ app.listen(3030, ()  => {
 
 ```ts
 import { Filesrocket } from "@filesrocket/core";
-import { Service } from "@filesrocket/local";
+import { LocalService } from "@filesrocket/local";
 
 // Initialize
 const filesrocket = new Filesrocket();
 
 // Config your service
-const service = new Service({
+const service = new LocalService({
   pagination: { default: 15, max: 50 },
   host: "http://localhost:3030",
   directory: "uploads"
