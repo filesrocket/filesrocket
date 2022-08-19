@@ -11,10 +11,18 @@
   "repository": {
     "url": "https://github.com/Filesrocket/filesrocket"
   },
+  "homepage": "https://filesrocket.com/",
   "workspaces": [
     "packages/*"
   ],
-  "scripts": {},
+  "scripts": {
+    "install": "lerna bootstrap",
+    "eslint": "eslint \"packages/**/*.ts\" --fix",
+    "test": "lerna run test",
+    "build": "lerna run build --no-private",
+    "prepublish": "npm run eslint && npm run test && npm run build",
+    "publish": "lerna publish --no-private"
+  },
   "license": "MIT",
   "dependencies": {
     "http-errors": "^2.0.0"

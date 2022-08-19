@@ -24,20 +24,15 @@
   "repository": {
     "url": "https://github.com/Filesrocket/filesrocket"
   },
+  "homepage": "https://filesrocket.com/",
   "files": [
     "lib/**",
     "README.md",
     "LICENCE"
   ],
   "scripts": {
-    "build": "npm run lint && npm run test && tsc -p .",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint --fix . --ext .ts",
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
-    "release": "standard-version",
-    "release:minor": "npm run release -- --release-as minor",
-    "release:major": "npm run release -- --release-as major",
-    "prepublishOnly": "npm run build"
+    "build": "tsc -p .",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "license": "MIT",
   "dependencies": {
