@@ -23,6 +23,9 @@
     "README.md",
     "LICENCE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "filesrocket",
     "filemanager",
@@ -38,5 +41,6 @@
   },
   "dependencies": {
     "@filesrocket/core": "^1.2.1"
-  }
+  },
+  "gitHead": "5c0959323477485769abaf3f1c0ef3772a5cacd7"
 }

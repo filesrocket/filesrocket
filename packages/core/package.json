@@ -11,6 +11,9 @@
     "storage",
     "files"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "author": {
     "name": "Ivan Zaldivar",
     "url": "https://github.com/thebug404"
@@ -47,5 +50,6 @@
     "@types/uniqid": "^5.3.2",
     "form-data": "^4.0.0",
     "supertest": "^6.2.4"
-  }
+  },
+  "gitHead": "5c0959323477485769abaf3f1c0ef3772a5cacd7"
 }

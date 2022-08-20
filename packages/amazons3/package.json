@@ -23,6 +23,9 @@
     "README.md",
     "LICENCE"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "s3",
     "aws",
@@ -39,5 +42,6 @@
   "dependencies": {
     "@filesrocket/core": "^1.2.1",
     "aws-sdk": "2.1199.0"
-  }
+  },
+  "gitHead": "5c0959323477485769abaf3f1c0ef3772a5cacd7"
 }
