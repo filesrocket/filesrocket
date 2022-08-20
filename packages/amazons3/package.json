@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "@filesrocket/core": "^1.2.0",
-    "aws-sdk": "2.1012.0"
+    "aws-sdk": "2.1199.0"
   }
 }

@@ -37,6 +37,6 @@
   "license": "MIT",
   "dependencies": {
     "@filesrocket/core": "^1.2.0",
-    "cloudinary": "^1.29.0"
+    "cloudinary": "^1.30.1"
   }
 }
