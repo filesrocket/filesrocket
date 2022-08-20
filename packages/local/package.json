@@ -1,6 +1,6 @@
 {
   "name": "@filesrocket/local",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Filesrocket service that manages your files locally",
   "main": "lib/index.js",
   "types": "lib",
@@ -37,6 +37,6 @@
     "test": "mocha -r ts-node/register test/**/*.spec.ts"
   },
   "dependencies": {
-    "@filesrocket/core": "^1.1.0"
+    "@filesrocket/core": "^1.2.0"
   }
 }
