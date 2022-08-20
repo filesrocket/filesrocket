@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [1.1.0](https://github.com/Filesrocket/filesrocket/compare/v1.0.1...v1.1.0) (2022-08-20)
+
+
+### Bug Fixes
+
+* **package.json:** Removed npm-check-updates from dependencies ([63e0530](https://github.com/Filesrocket/filesrocket/commit/63e05305a9017ab2c5188f39055ecb38f9ad6dd2))
+* **package.json:** Removed package standard-version ([cebeb85](https://github.com/Filesrocket/filesrocket/commit/cebeb8522493547af3a60877037529748bded356))
+* **service:** Add an exception when registering a service that already exists ([e0a825e](https://github.com/Filesrocket/filesrocket/commit/e0a825e2bcdaa1e0b442f20b28bcaedfe27217a7))
+
+
+### Features
+
+* **dependencies:** Dependencies updated ([55dd81c](https://github.com/Filesrocket/filesrocket/commit/55dd81c4b7f6f29ba671195e4d8ee0b8f43eacfa))
+* **LICENCE:** Updated information ([40752e5](https://github.com/Filesrocket/filesrocket/commit/40752e5687f62377382badb9550d78a474460350))
+* **package.json:** Updated repository and issue links ([9f7c15a](https://github.com/Filesrocket/filesrocket/commit/9f7c15a3f7f79e9f7b3d552ddb5630c646e982de))
+
+
+
+
+
+
 ## [1.0.1](https://github.com/Filesrocket/filesrocket/compare/v1.0.0...v1.0.1) (2022-08-07)
 
 **Note:** Version bump only for package filesrocket
