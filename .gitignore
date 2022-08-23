@@ -9,3 +9,6 @@ packages/**/.env
 
 # Typescript compiled.
 packages/**/lib
+
+# Files
+package-lock.json
