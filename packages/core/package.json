@@ -1,6 +1,6 @@
 {
   "name": "@filesrocket/core",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Manage your files with any cloud storage service (Clodinary, Amazon S3).",
   "main": "lib/index.js",
   "types": "lib",
