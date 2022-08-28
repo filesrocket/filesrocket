@@ -2,7 +2,21 @@
   "packages": [
     "packages/*"
   ],
+  "command": {
+    "publish": {
+      "message": "chore(release): publish %s",
+      "conventionalCommits": true,
+      "createRelease": "github"
+    }
+  },
   "useNx": true,
   "useWorkspaces": true,
-  "version": "independent"
+  "version": "independent",
+  "ignoreChanges": [
+    "**/CHANGELOG.md",
+    "**/package-lock.json",
+    "**/test/**",
+    "lerna.json",
+    "readme.md"
+  ]
 }
