@@ -15,9 +15,17 @@ import { BaseAmazonRocket } from './base'
 export class AmazonS3Service extends BaseAmazonRocket implements ServiceMethods {
   constructor (options: AmazonConfig) {
     super(options)
+
     this.createBucket(options.Bucket)
-      .then(() => console.log('Your bucket was create successfully.'))
-      .catch(() => console.error('Your bucket already exist.'))
+      .then((location) => console.log(`Your ${location} bucket was create successfully.`))
+      .catch((error) => {
+        if (error.name === 'BucketAlreadyOwnedByYou' || error.name === 'BucketAlreadyExists') {
+          const { name, message } = error
+          return console.warn(`${name}: ${message}`)
+        }
+
+        throw error
+      })
   }
 
   async create (data: InputEntity, query: Query = {}): Promise<OutputEntity> {
