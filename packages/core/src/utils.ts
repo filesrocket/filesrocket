@@ -1,13 +1,17 @@
 import { parse } from 'path'
 import uniqid from 'uniqid'
+import {nanoid} from "nanoid";
+
 
 /**
  * Generate a unique filename.
  * @param filename Filename.
  */
-export function generateRandomFilename (filename: string): string {
+export function generateRandomFilename (filename: string, removeFullName= true): string {
   const { name, ext } = parse(filename)
-  const uniquename = `${name.split(' ').join('-')}-${uniqid()}`
+  const uniquename = removeFullName ?
+      `${nanoid(30)}` :
+      `${name.split(' ').join('-')}-${uniqid()}`
   return `${uniquename}${ext}`
 }
 

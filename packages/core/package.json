@@ -40,6 +40,7 @@
   "license": "MIT",
   "dependencies": {
     "busboy": "^1.6.0",
+    "nanoid": "^4.0.0",
     "uniqid": "^5.4.0"
   },
   "devDependencies": {
