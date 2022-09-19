@@ -1,6 +1,5 @@
-import { NotFound } from 'http-errors'
-
 import { InputEntity, OutputEntity, Query, ServiceMethods } from '../../src/index'
+import { NotFound } from '../../src/errors'
 
 export class FileService implements ServiceMethods {
   items: Partial<InputEntity>[] = [

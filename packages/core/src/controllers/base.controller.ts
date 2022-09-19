@@ -1,11 +1,5 @@
-import {
-  ServiceMethods,
-  OutputEntity,
-  Paginated,
-  Params,
-  Query
-} from '../declarations'
-import { NotImplemented } from 'http-errors'
+import { ServiceMethods, OutputEntity, Paginated, Params, Query } from '../declarations'
+import { NotImplemented } from '../errors'
 
 type GetParams = Pick<Params, 'path'> & Query;
 
@@ -20,7 +14,7 @@ export class BaseController {
     return this.service.list(query)
   }
 
-  get (id: string, query: Partial<GetParams> = {}): Promise<OutputEntity> {
+  async get (id: string, query: Partial<GetParams> = {}): Promise<OutputEntity> {
     if (typeof this.service.get !== 'function') {
       throw new NotImplemented('Method has not been implemented')
     }

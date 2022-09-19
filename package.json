@@ -26,11 +26,7 @@
     "publish:prerelease": "npm run prepublish && lerna publish prerelease --no-private --preid pre --pre-dist-tag pre --dist-tag pre --force-publish && git commit -am \"chore: Publish release\" && git push origin"
   },
   "license": "MIT",
-  "dependencies": {
-    "http-errors": "^2.0.0"
-  },
   "devDependencies": {
-    "@types/http-errors": "^1.8.2",
     "@types/mocha": "^9.1.1",
     "@types/node": "^18.7.8",
     "@typescript-eslint/eslint-plugin": "^5.33.1",

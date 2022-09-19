@@ -2,14 +2,8 @@ import { Request } from 'express'
 import busboy from 'busboy'
 import path from 'path'
 
-import {
-  ServiceMethods,
-  UploadOptions,
-  OutputEntity,
-  InputEntity,
-  Query
-} from '../declarations'
-import { NotImplemented, BadRequest, BandwidthLimitExceeded } from 'http-errors'
+import { ServiceMethods, UploadOptions, OutputEntity, InputEntity, Query } from '../declarations'
+import { NotImplemented, BadRequest, BandwidthLimitExceeded } from '../errors'
 import { BaseController } from './base.controller'
 import { generateRandomFilename } from '../utils'
 import { Counter } from '../helpers/counter'
