@@ -1,0 +1,45 @@
+{
+  "name": "@filesrocket/azure",
+  "version": "1.0.0",
+  "description": "Filesrocket service that manage the files of the Microsoft Azure",
+  "main": "lib/index.js",
+  "types": "lib",
+  "scripts": {
+    "build": "tsc -p .",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts"
+  },
+  "keywords": [
+    "azure",
+    "microsoft azure",
+    "filesmanagement",
+    "uploads",
+    "files",
+    "filesrocket"
+  ],
+  "author": {
+    "name": "Ivan Zaldivar",
+    "url": "https://github.com/thebug404"
+  },
+  "repository": {
+    "url": "https://github.com/Filesrocket/filesrocket"
+  },
+  "homepage": "https://filesrocket.com/",
+  "bugs": {
+    "url": "https://github.com/Filesrocket/filesrocket/issues"
+  },
+  "directories": {
+    "lib": "lib"
+  },
+  "files": [
+    "LICENCE",
+    "README.md",
+    "lib/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@filesrocket/core": "^1.2.2"
+  }
+}
